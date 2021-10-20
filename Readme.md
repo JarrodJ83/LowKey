@@ -27,6 +27,8 @@ public async Task<Product?> Handle(ProductById query, CancellationToken) =>
 private readonly IDataStore<ProductDbContext> _dataStore;
 private readonly ProductDatabase _productDb;
 
+...
+
 public async Task<Product?> Handle(ProductById query, CancellationToken) =>
      _dataStore.QueryAsync(_productDb, ctx =>        
         ctx.Products.SingleOrDefault(product => product.Id == query.Id));
@@ -36,11 +38,21 @@ public async Task<Product?> Handle(ProductById query, CancellationToken) =>
 
 ```
 private readonly IDataStore<ProductDbContext> _dataStore;
-private readonly ProductDatabase _productDb;
+private readonly ProductDatabase _productDb; 
+
+...
 
 public async Task<Product?> Handle(ProductById query, CancellationToken) =>
      _dataStore.QueryAsync(query.TenantId, _productDb, ctx =>        
         ctx.Products.SingleOrDefault(product => product.Id == query.Id));
 ```
 
+## LowKey CQRS
+Building blocks for implementing CQRS to allow easy cross cutting concerns (validation, transactions, validation, resiliency, etc) to be implemented.
+
+```
+ICommandHandler<TCmd>
+ICommandHandler<TCmd, TResult>
+IQueryHandler<TQry, TResult>
+```
 
