@@ -14,22 +14,20 @@ Building blocks for interacting with data stores without worrying about the deta
 
 ```
 private readonly IDataStore<DbConnection> _dataStore;
-private readonly Database _database;
+private readonly ProductDatabase _productDb;
 
 public async Task<Product?> Handle(ProductById query, CancellationToken) =>
-     _dataStore.QueryAsync(_database, conn =>        
-        conn.QuerySingleOrDefaultAsync<Product>("select id, name from product where id = @id", query)
-    );
+     _dataStore.QueryAsync(_productDb, conn =>        
+        conn.QuerySingleOrDefaultAsync<Product>("select id, name from product where id = @id", query));
 ```
 
 ### Using a EFCore
 
 ```
 private readonly IDataStore<ProductDbContext> _dataStore;
-private readonly Database _database;
+private readonly ProductDatabase _productDb;
 
 public async Task<Product?> Handle(ProductById query, CancellationToken) =>
-     _dataStore.QueryAsync(_database, ctx =>        
-        ctx.Products.SingleOrDefault(product => product.Id == query.Id);
-    );
+     _dataStore.QueryAsync(_productDb, ctx =>        
+        ctx.Products.SingleOrDefault(product => product.Id == query.Id));
 ```
