@@ -31,3 +31,16 @@ public async Task<Product?> Handle(ProductById query, CancellationToken) =>
      _dataStore.QueryAsync(_productDb, ctx =>        
         ctx.Products.SingleOrDefault(product => product.Id == query.Id));
 ```
+
+### Using a EFCore Multi-Tenanted
+
+```
+private readonly IDataStore<ProductDbContext> _dataStore;
+private readonly ProductDatabase _productDb;
+
+public async Task<Product?> Handle(ProductById query, CancellationToken) =>
+     _dataStore.QueryAsync(query.TenantId, _productDb, ctx =>        
+        ctx.Products.SingleOrDefault(product => product.Id == query.Id));
+```
+
+
