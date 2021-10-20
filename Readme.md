@@ -48,7 +48,7 @@ public async Task<Product?> Handle(ProductById query, CancellationToken) =>
 ```
 
 ## LowKey CQRS
-Building blocks for implementing CQRS to allow easy cross cutting concerns (validation, transactions, validation, resiliency, etc) to be implemented.
+Building blocks for implementing CQRS to allow easy cross cutting concerns to be implemented.
 
 ```
 ICommandHandler<TCmd>
@@ -56,3 +56,10 @@ ICommandHandler<TCmd, TResult>
 IQueryHandler<TQry, TResult>
 ```
 
+Decorators provided for: 
+
+* Validation
+* Transactions
+* Resiliency
+* Tracing / Diagnostics
+* Logging
