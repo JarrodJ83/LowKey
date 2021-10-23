@@ -48,18 +48,30 @@ public async Task<Product?> Handle(ProductById query, CancellationToken) =>
 ```
 
 ## LowKey CQRS
-Building blocks for implementing CQRS to allow easy cross cutting concerns to be implemented.
+Building blocks for implementing CQRS to allow easy cross cutting concerns to be implemented. Notice that unlike other libraries there are no empty IQuery/ICommand interfaces or attributes that need added to your query or commands in order for them to work with LowKey.
+
+### Commands
+Command are for handling state change in your application. In pure theory a "command" never returns a result but in the real world often a command creates some type of entity that you'd also like to return to the caller so there are interfaces for both.
 
 ```
 ICommandHandler<TCmd>
 ICommandHandler<TCmd, TResult>
+```
+
+### Queries
+Queries represent read-only operations to collect data. They should never mutate state.
+
+```
 IQueryHandler<TQry, TResult>
 ```
 
+### Requests
+Requests are a higher-level abstraction that could represent a web-request or maybe a request disptached as a result of handling an event. They represent the "business logic" you are looking to implement. 
+
 Decorators provided for: 
 
-* Validation
-* Transactions
-* Resiliency
-* Tracing / Diagnostics
-* Logging
+* Validation (via Data Annotations) 
+* Transactions 
+* Resiliency (via Polly)
+* Tracing / Diagnostics (via System.Diagnostics.DiagnosticSource)
+* Logging (via Microsoft.Extensions.Logging)
