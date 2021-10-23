@@ -1,4 +1,4 @@
 ﻿namespace LowKey.Data
 {
-    public abstract record Db { }
+    public record Db(string Name, string Server, int Port);
 }

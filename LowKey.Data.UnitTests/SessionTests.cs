@@ -6,7 +6,7 @@ using Xunit;
 namespace LowKey.Data.UnitTests
 {
     record TestClient(Db db);
-    record TestDb : Db;
+    
     class TestClientFactory : IClientFactory<TestClient>
     {
         public Task<TestClient> CreateForStore(Db db)
@@ -17,6 +17,7 @@ namespace LowKey.Data.UnitTests
 
     public class SessionTests
     {
+        Db TestDb = new("", "", 0);
         Session<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
 
@@ -31,7 +32,7 @@ namespace LowKey.Data.UnitTests
         {
             TestClient testClient = null;
 
-            await _session.Execute(new TestDb(), client => {
+            await _session.Execute(TestDb, client => {
                 testClient = client;
                 return Task.CompletedTask;
             });
@@ -44,7 +45,7 @@ namespace LowKey.Data.UnitTests
         {
             TestClient testClient = null;
 
-            var result = await _session.Execute(new TestDb(), client => {
+            var result = await _session.Execute(TestDb, client => {
                 testClient = client;
                 return Task.FromResult(new TestResult());
             });
