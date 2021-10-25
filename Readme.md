@@ -75,3 +75,14 @@ Decorators provided for:
 * Resiliency (via Polly)
 * Tracing / Diagnostics (via System.Diagnostics.DiagnosticSource)
 * Logging (via Microsoft.Extensions.Logging)
+
+## Putting it together
+Here is an example of using LowKey Data + CQRS for a simple web request to create a product and to retrieve a product.
+
+### Post a product
+var app = WebApplication.Create(args);
+ 
+app.MapPost("/product", (HttpContext http, CreateProduct createProduct, CancellationToken cancellation) => 
+    http.GetService<IRequestHandler<CreateProduct>>().HandleAsync(createProduct, cancellation));
+ 
+app.Run();
