@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -7,7 +6,7 @@ namespace LowKey.Data.Sql
 {
     public class SqlDbConnectionFactory : IClientFactory<DbConnection>
     {
-        SqlConnectionStringBuilder _sqlConnectionStringBuilder;
+        private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
 
         public SqlDbConnectionFactory(SqlConnectionStringBuilder sqlConnectionStringBuilder)
         {
