@@ -10,10 +10,13 @@ namespace LowKey.Data.UnitTests
 {
     public class TransactionCommandSessionTests
     {
-        ICommandSession<TestClient> _commandSession;
+        TransactionalCommandSession<TestClient> _commandSession;
+        TestCommandSession _decoratedCommandSession;
+
         public TransactionCommandSessionTests()
         {
-            _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), TransactionScopeOption.Required, new TransactionOptions
+            _decoratedCommandSession = new TestCommandSession();
+            _commandSession = new TransactionalCommandSession<TestClient>(_decoratedCommandSession, TransactionScopeOption.Required, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted
             });
@@ -51,34 +54,38 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task TransactionIsCommitted()
         {
-            var transactionScopeOptions = TransactionScopeOption.Required;
-            var transactionOptions = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.MaxValue
-            };
+            Transaction? transaction = null;
 
-            _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), transactionScopeOptions, transactionOptions);
-
-            Transaction transaction;
-                        
             await _commandSession.Execute(new Db("test", "", 0), client =>
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 transaction = Transaction.Current;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                Assert.Equal(TransactionStatus.Committed, transaction?.TransactionInformation.Status);
                 return Task.CompletedTask;
             });
 
-            Assert.Equal(TransactionStatus.Committed, TransactionStatus.Committed);
+            Assert.NotNull(transaction);
+        }
+
+        [Fact]
+        public async Task DecoratedCommandSessionIsInvoked()
+        {
+            await _commandSession.Execute(new Db("test", "", 0), client =>
+            {
+                return Task.CompletedTask;
+            });
+
+            Assert.True(_decoratedCommandSession.Executed);
         }
     }
 
     class TestCommandSession : ICommandSession<TestClient>
     {
+        public bool Executed = false;
+
         public Task Execute(Db db, Func<TestClient, Task> command, CancellationToken cancellation = default)
         {
-            return Task.CompletedTask;
+            Executed = true;
+            return command(new TestClient(db));
         }
     }
 }
