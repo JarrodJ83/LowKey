@@ -14,17 +14,19 @@ namespace LowKey.Data.UnitTests
         ICommandSession<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
         Activity? _commandActivity;
-        
+        ActivityListener _activityListener;
+
         public ActivityCommandSessionTests()
         {
             _clientFactory = new TestClientFactory();
             _session = new ActivityCommandSession<TestClient>(new Session<TestClient>(_clientFactory));
-            ActivitySource.AddActivityListener(new ActivityListener
+            _activityListener = new ActivityListener
             {
                 ShouldListenTo = _ => true,
                 Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
                 ActivityStarted = activity => _commandActivity = activity
-            });
+            };
+            ActivitySource.AddActivityListener(_activityListener);
         }
 
         [Fact]
@@ -50,6 +52,18 @@ namespace LowKey.Data.UnitTests
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
             TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestDb.Port.ToString());
             TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, $"Command");
+        }
+
+        [Fact]
+        public async Task CommandActivityShouldNotHaveTagsWhenActivityNotRequestingAllData()
+        {
+            _activityListener.Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.PropagationData;
+
+            await _session.Execute(TestDb, client => {
+                return Task.CompletedTask;
+            });
+
+            Assert.Empty(_commandActivity.TagObjects);
         }
 
         void TestTag(string key, string expectedValue)
