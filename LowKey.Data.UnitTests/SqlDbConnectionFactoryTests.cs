@@ -7,10 +7,10 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class DbConnectionFactoryTests
+    public class SqlDbConnectionFactoryTests
     {
         IClientFactory<DbConnection> _dbConnFactory;
-        public DbConnectionFactoryTests()
+        public SqlDbConnectionFactoryTests()
         {
             _dbConnFactory = new SqlDbConnectionFactory(new SqlConnectionStringBuilder());
         }
