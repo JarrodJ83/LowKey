@@ -8,13 +8,13 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class TransactionCommandSessionTests
+    public class TransactionalCommandSessionTests
     {
         TransactionalCommandSession<TestClient> _commandSession;
         TestCommandSession _decoratedCommandSession;
         Db TestDb = new("TestDb", "test.server", 0);
 
-        public TransactionCommandSessionTests()
+        public TransactionalCommandSessionTests()
         {
             _decoratedCommandSession = new TestCommandSession();
             _commandSession = new TransactionalCommandSession<TestClient>(_decoratedCommandSession, TransactionScopeOption.Required, new TransactionOptions
