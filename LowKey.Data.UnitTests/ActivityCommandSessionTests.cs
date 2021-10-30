@@ -63,7 +63,7 @@ namespace LowKey.Data.UnitTests
                 return Task.CompletedTask;
             });
 
-            Assert.Empty(_commandActivity.TagObjects);
+            Assert.Empty(_commandActivity?.TagObjects);
         }
 
         void TestTag(string key, string expectedValue)
