@@ -12,7 +12,7 @@ namespace LowKey.Data.UnitTests
         IClientFactory<DbConnection> _dbConnFactory;
         public DbConnectionFactoryTests()
         {
-            _dbConnFactory = new SqlDbConnectionFactory(new System.Data.SqlClient.SqlConnectionStringBuilder());
+            _dbConnFactory = new SqlDbConnectionFactory(new SqlConnectionStringBuilder());
         }
 
         [Theory, AutoData]
