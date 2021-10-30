@@ -16,19 +16,13 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task CreateDbConnection(Db testDb)
-        {
-            var conn = await _dbConnFactory.CreateForStore(testDb);
-
-            Assert.NotNull(conn);
-        }
-
-        [Theory, AutoData]
         public async Task ConnectionIsForCorrectDatabase(Db testDb)
         {
             var conn = await _dbConnFactory.CreateForStore(testDb);
 
+            Assert.NotNull(conn);
             Assert.Equal(conn.Database, testDb.Name);
+
             var connectionStringBuilder = new SqlConnectionStringBuilder(conn.ConnectionString);
 
             var datasourceParts = connectionStringBuilder.DataSource.Split(":");
