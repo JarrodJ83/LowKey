@@ -18,19 +18,19 @@ namespace LowKey.Data.UnitTests
         [Theory, AutoData]
         public async Task ConnectionIsForCorrectDatabase(Db testDb)
         {
-            var conn = await _dbConnFactory.CreateForStore(testDb);
+            DbConnection conn = await _dbConnFactory.CreateForStore(testDb);
 
             Assert.NotNull(conn);
             Assert.Equal(conn.Database, testDb.Name);
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(conn.ConnectionString);
 
-            var datasourceParts = connectionStringBuilder.DataSource.Split(":");
-            var server = datasourceParts[0];
-            var port = datasourceParts[1];
+            string[] datasourceParts = connectionStringBuilder.DataSource.Split(":");
+            string server = datasourceParts[0];
+            int port = int.Parse(datasourceParts[1]);
 
             Assert.Equal(server, testDb.Server);
-            Assert.Equal(int.Parse(port), testDb.Port);
+            Assert.Equal(port, testDb.Port);
         }
     }
 }
