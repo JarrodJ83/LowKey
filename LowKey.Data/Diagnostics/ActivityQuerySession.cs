@@ -5,24 +5,24 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data.Diagnostics
 {
-    public class ActivityCommandSession<TClient> : ICommandSession<TClient>
+    public class ActivityQuerySession<TClient> : IQuerySession<TClient>
     {
-        private readonly ICommandSession<TClient> _commandSession;
-        private const string Operation = "command";
-
-        public ActivityCommandSession(ICommandSession<TClient> commandSession)
+        private readonly IQuerySession<TClient> _querySession;
+        private const string Operation = "query";
+        
+        public ActivityQuerySession(IQuerySession<TClient> querySession)
         {
-            _commandSession = commandSession;
+            _querySession = querySession;
         }
 
-        public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
+        public async Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
             using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", ActivityKind.Client);
 
             activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
 
             // Don't return a task here or it will not be executed inside of the ActivitySource!
-            await _commandSession.Execute(db, command, cancellation);
+            return await _querySession.Execute(db, query, cancellation);
         }
     }
 }
