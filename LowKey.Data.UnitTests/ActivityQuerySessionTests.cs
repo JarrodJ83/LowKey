@@ -8,74 +8,68 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class ActivityCommandSessionTests
+    public class ActivityQuerySessionTests
     {
         Db TestDb = new("TestDb", "test.server", 0);
-        ICommandSession<TestClient> _session;
+        IQuerySession<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
-        Activity? _commandActivity;
+        Activity? _activity;
         ActivityListener _activityListener;
 
-        public ActivityCommandSessionTests()
+        public ActivityQuerySessionTests()
         {
             _clientFactory = new TestClientFactory();
-            _session = new ActivityCommandSession<TestClient>(new Session<TestClient>(_clientFactory));
+            _session = new ActivityQuerySession<TestClient>(new Session<TestClient>(_clientFactory));
             _activityListener = new ActivityListener
             {
                 ShouldListenTo = _ => true,
                 Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
-                ActivityStarted = activity => _commandActivity = activity
+                ActivityStarted = activity => _activity = activity
             };
             ActivitySource.AddActivityListener(_activityListener);
         }
 
         [Fact]
-        public async Task CommandActivityIsTraced()
+        public async Task QueryActivityIsTraced()
         {
-            await _session.Execute(TestDb, client => {
-                return Task.CompletedTask;
-            });
+            await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
 
-            Assert.NotNull(_commandActivity);
-            Assert.Equal(ActivitySourceNames.SessionActivityName, _commandActivity?.Source.Name);
-            Assert.Equal($"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Command", _commandActivity?.OperationName);
+            Assert.NotNull(_activity);
+            Assert.Equal(ActivitySourceNames.SessionActivityName, _activity?.Source.Name);
+            Assert.Equal($"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Query", _activity?.OperationName);
         }
 
         [Fact]
-        public async Task CommandActivityHasCorrectTags()
+        public async Task QueryActivityHasCorrectTags()
         {
-            await _session.Execute(TestDb, client => {
-                return Task.CompletedTask;
-            });
+            await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
 
             TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestDb.Name);
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
             TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestDb.Port.ToString());
-            TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, $"Command");
+            TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, "Query");
             TestTag(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName ?? string.Empty);
         }
 
         [Fact]
-        public async Task CommandActivityShouldNotHaveTagsWhenActivityNotRequestingAllData()
+        public async Task QueryActivityShouldNotHaveTagsWhenActivityNotRequestingAllData()
         {
             _activityListener.Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.PropagationData;
 
-            await _session.Execute(TestDb, client => {
-                return Task.CompletedTask;
-            });
+            await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
 
-            Assert.Empty(_commandActivity?.TagObjects);
+            Assert.Empty(_activity?.TagObjects);
         }
 
         void TestTag(string key, string expectedValue)
         {
-            if (_commandActivity == null) throw new Exception("Activity null");
+            if (_activity == null) throw new Exception("Activity null");
 
-            var hasTag = _commandActivity.TagObjects.Any(tag => tag.Key.Equals(key));
+            var hasTag = _activity.TagObjects.Any(tag => tag.Key.Equals(key));
 
             Assert.True(hasTag, $"Tag {key} was not found");
 
-            KeyValuePair<string, object?> tag = _commandActivity.TagObjects.Single(tag => tag.Key.Equals(key));
+            KeyValuePair<string, object?> tag = _activity.TagObjects.Single(tag => tag.Key.Equals(key));
             string actual = tag.Value?.ToString() ?? string.Empty;
             Assert.True(expectedValue.Equals(actual), $"Tag {key}\nExpected: {expectedValue}\nActual:  {actual}");
         }

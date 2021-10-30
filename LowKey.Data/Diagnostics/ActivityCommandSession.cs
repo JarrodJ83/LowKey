@@ -8,7 +8,7 @@ namespace LowKey.Data.Diagnostics
     public class ActivityCommandSession<TClient> : ICommandSession<TClient>
     {
         private readonly ICommandSession<TClient> _commandSession;
-        private const string Operation = "command";
+        private const string Operation = "Command";
 
         public ActivityCommandSession(ICommandSession<TClient> commandSession)
         {
@@ -17,7 +17,7 @@ namespace LowKey.Data.Diagnostics
 
         public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
-            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", ActivityKind.Client);
+            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
             activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
 

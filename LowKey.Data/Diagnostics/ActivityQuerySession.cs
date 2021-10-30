@@ -8,7 +8,7 @@ namespace LowKey.Data.Diagnostics
     public class ActivityQuerySession<TClient> : IQuerySession<TClient>
     {
         private readonly IQuerySession<TClient> _querySession;
-        private const string Operation = "query";
+        private const string Operation = "Query";
         
         public ActivityQuerySession(IQuerySession<TClient> querySession)
         {
@@ -17,7 +17,7 @@ namespace LowKey.Data.Diagnostics
 
         public async Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
-            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", ActivityKind.Client);
+            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
             activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
 
