@@ -64,7 +64,9 @@ namespace LowKey.Data.UnitTests
                         
             await _commandSession.Execute(new Db("test", "", 0), client =>
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 transaction = Transaction.Current;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 return Task.CompletedTask;
             });
 
