@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace LowKey.Data.Diagnostics
 
         public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
-            using var activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", System.Diagnostics.ActivityKind.Client);
+            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", System.Diagnostics.ActivityKind.Client);
 
             if (activity?.IsAllDataRequested == true)
             {

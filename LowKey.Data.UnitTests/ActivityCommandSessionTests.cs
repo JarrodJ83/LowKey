@@ -36,6 +36,7 @@ namespace LowKey.Data.UnitTests
 
             Assert.NotNull(_commandActivity);
             Assert.Equal(ActivitySourceNames.SessionActivityName, _commandActivity?.Source.Name);
+            Assert.Equal($"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Command", _commandActivity?.OperationName);
         }
 
         [Fact]
@@ -48,19 +49,19 @@ namespace LowKey.Data.UnitTests
             TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestDb.Name);
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
             TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestDb.Port.ToString());
-            TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, $"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Command");
+            TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, $"Command");
         }
 
         void TestTag(string key, string expectedValue)
         {
             if (_commandActivity == null) throw new Exception("Activity null");
 
-            var hasTag = _commandActivity.Tags.Any(tag => tag.Key.Equals(key));
+            var hasTag = _commandActivity.TagObjects.Any(tag => tag.Key.Equals(key));
 
             Assert.True(hasTag, $"Tag {key} was not found");
 
-            KeyValuePair<string, string?> tag = _commandActivity.Tags.Single(tag => tag.Key.Equals(key));
-            var actual = tag.Value ?? string.Empty;
+            KeyValuePair<string, object?> tag = _commandActivity.TagObjects.Single(tag => tag.Key.Equals(key));
+            string actual = tag.Value?.ToString() ?? string.Empty;
             Assert.True(expectedValue.Equals(actual), $"Tag {key}\nExpected: {expectedValue}\nActual:  {actual}");
         }
     }
