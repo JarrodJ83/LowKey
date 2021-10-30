@@ -21,6 +21,11 @@ namespace LowKey.Data.Diagnostics
 
             activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
 
+            if (activity?.IsAllDataRequested == true)
+            {
+                activity?.SetTag(LowKeyDataActivityTags.QueryResultType, typeof(TResult).FullName);
+            }
+
             // Don't return a task here or it will not be executed inside of the ActivitySource!
             return await _querySession.Execute(db, query, cancellation);
         }

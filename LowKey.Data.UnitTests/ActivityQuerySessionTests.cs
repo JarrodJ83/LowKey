@@ -48,7 +48,10 @@ namespace LowKey.Data.UnitTests
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
             TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestDb.Port.ToString());
             TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, "Query");
-            TestTag(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName ?? string.Empty);
+#pragma warning disable CS8604 // Possible null reference argument.
+            TestTag(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName);
+            TestTag(LowKeyDataActivityTags.QueryResultType, typeof(string)?.FullName);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         [Fact]
