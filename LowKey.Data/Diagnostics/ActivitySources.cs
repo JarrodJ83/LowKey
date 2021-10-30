@@ -8,7 +8,6 @@ namespace LowKey.Data.Diagnostics
     }
     internal static class ActivitySources
     {
-        
-        public static readonly ActivitySource SessionActivity = new ActivitySource(ActivitySourceNames.SessionActivityName, typeof(ActivitySources).Assembly.GetName().Version.ToString());
+        public static readonly ActivitySource SessionActivity = new ActivitySource(ActivitySourceNames.SessionActivityName, typeof(ActivitySources).Assembly.GetName().Version?.ToString());
     }
 }

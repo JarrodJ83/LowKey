@@ -18,7 +18,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task SessionCreatesClientAndExecutesCommand()
         {
-            TestClient testClient = null;
+            TestClient? testClient = null;
 
             await _session.Execute(TestDb, client => {
                 testClient = client;
@@ -31,7 +31,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task SessionCreatesClientAndExecutesQueryWithResult()
         {
-            TestClient testClient = null;
+            TestClient? testClient = null;
 
             var result = await _session.Execute(TestDb, client => {
                 testClient = client;
