@@ -16,7 +16,7 @@ namespace LowKey.Data.Diagnostics
 
         public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
-            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", System.Diagnostics.ActivityKind.Client);
+            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} Command", ActivityKind.Client);
 
             if (activity?.IsAllDataRequested == true)
             {
@@ -24,6 +24,7 @@ namespace LowKey.Data.Diagnostics
                 activity.SetTag(OpenTelemetryDatabaseTags.DatabasePort, db.Port);
                 activity.SetTag(OpenTelemetryDatabaseTags.DatabaseName, db.Name);
                 activity.SetTag(OpenTelemetryDatabaseTags.DatabaseOperation, "Command");
+                activity.SetTag(LowKeyDataActivityTags.ClientType, typeof(TClient).FullName);
             }
 
             // Don't return a task here or it will not be executed inside of the ActivitySource!

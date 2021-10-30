@@ -52,6 +52,7 @@ namespace LowKey.Data.UnitTests
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
             TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestDb.Port.ToString());
             TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, $"Command");
+            TestTag(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName ?? string.Empty);
         }
 
         [Fact]
