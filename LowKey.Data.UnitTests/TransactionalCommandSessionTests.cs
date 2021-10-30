@@ -76,10 +76,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task DecoratedCommandSessionIsInvoked()
         {
-            await _commandSession.Execute(TestDb, client =>
-            {
-                return Task.CompletedTask;
-            });
+            await _commandSession.Execute(TestDb, client => Task.CompletedTask);
 
             Assert.True(_decoratedCommandSession.Executed);
         }

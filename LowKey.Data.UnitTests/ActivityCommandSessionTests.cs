@@ -32,9 +32,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task CommandActivityIsTraced()
         {
-            await _session.Execute(TestDb, client => {
-                return Task.CompletedTask;
-            });
+            await _session.Execute(TestDb, client => Task.CompletedTask);
 
             Assert.NotNull(_commandActivity);
             Assert.Equal(ActivitySourceNames.SessionActivityName, _commandActivity?.Source.Name);
@@ -44,9 +42,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task CommandActivityHasCorrectTags()
         {
-            await _session.Execute(TestDb, client => {
-                return Task.CompletedTask;
-            });
+            await _session.Execute(TestDb, client => Task.CompletedTask);
 
             TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestDb.Name);
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
@@ -60,9 +56,7 @@ namespace LowKey.Data.UnitTests
         {
             _activityListener.Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.PropagationData;
 
-            await _session.Execute(TestDb, client => {
-                return Task.CompletedTask;
-            });
+            await _session.Execute(TestDb, client => Task.CompletedTask);
 
             Assert.Empty(_commandActivity?.TagObjects);
         }
