@@ -12,6 +12,7 @@ namespace LowKey.Data.UnitTests
     {
         TransactionalCommandSession<TestClient> _commandSession;
         TestCommandSession _decoratedCommandSession;
+        Db TestDb = new("TestDb", "test.server", 0);
 
         public TransactionCommandSessionTests()
         {
@@ -25,7 +26,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task TransactionIsPresentWithinCommandHandler()
         {
-            await _commandSession.Execute(new Db("test", "", 0), client =>
+            await _commandSession.Execute(TestDb, client =>
             {
                 Assert.NotNull(Transaction.Current);
                 return Task.CompletedTask;
@@ -44,7 +45,7 @@ namespace LowKey.Data.UnitTests
 
             _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), transactionScopeOptions, transactionOptions);
 
-            return _commandSession.Execute(new Db("test", "", 0), client =>
+            return _commandSession.Execute(TestDb, client =>
             {
                 Assert.Equal(transactionOptions.IsolationLevel, Transaction.Current?.IsolationLevel);
                 return Task.CompletedTask;
@@ -56,7 +57,7 @@ namespace LowKey.Data.UnitTests
         {
             TransactionStatus? transactionStatus = null;
 
-            await _commandSession.Execute(new Db("test", "", 0), client =>
+            await _commandSession.Execute(TestDb, client =>
             {
                 if (Transaction.Current is not null)
                 {
@@ -76,7 +77,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task DecoratedCommandSessionIsInvoked()
         {
-            await _commandSession.Execute(new Db("test", "", 0), client =>
+            await _commandSession.Execute(TestDb, client =>
             {
                 return Task.CompletedTask;
             });
