@@ -54,17 +54,24 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task TransactionIsCommitted()
         {
-            Transaction? transaction = null;
+            TransactionStatus? transactionStatus = null;
 
             await _commandSession.Execute(new Db("test", "", 0), client =>
             {
-                transaction = Transaction.Current;
-                Assert.Equal(TransactionStatus.Committed, transaction?.TransactionInformation.Status);
+                if (Transaction.Current is not null)
+                {
+                    Transaction.Current.TransactionCompleted += (sender, e) =>
+                    {
+                        transactionStatus = e.Transaction?.TransactionInformation.Status;
+                    };
+                }
                 return Task.CompletedTask;
             });
 
-            Assert.NotNull(transaction);
+            Assert.NotNull(transactionStatus);
+            Assert.Equal(TransactionStatus.Committed, transactionStatus);
         }
+
 
         [Fact]
         public async Task DecoratedCommandSessionIsInvoked()

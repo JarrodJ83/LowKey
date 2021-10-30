@@ -22,6 +22,7 @@ namespace LowKey.Data.Transactions
         {
             using var trxScope = new TransactionScope(_transactionScopeOption, _transactionOptions, TransactionScopeAsyncFlowOption.Enabled);
             await _commandSession.Execute(db, command, cancellation);
+            trxScope.Complete();
         }
     }
 }
