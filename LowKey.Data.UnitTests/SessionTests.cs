@@ -1,20 +1,8 @@
-using System;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    record TestClient(Db db);
-    
-    class TestClientFactory : IClientFactory<TestClient>
-    {
-        public Task<TestClient> CreateForStore(Db db)
-        {
-            return Task.FromResult(new TestClient(db));
-        }
-    }
-
     public class SessionTests
     {
         Db TestDb = new("", "", 0);
