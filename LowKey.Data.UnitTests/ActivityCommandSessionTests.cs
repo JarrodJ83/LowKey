@@ -73,5 +73,20 @@ namespace LowKey.Data.UnitTests
             string actual = tag.Value?.ToString() ?? string.Empty;
             Assert.True(expectedValue.Equals(actual), $"Tag {key}\nExpected: {expectedValue}\nActual:  {actual}");
         }
+
+        [Fact]
+        public async Task ActivityIsPresentWithinExecutionOfCommand()
+        {
+            Activity? activityWithinCommand = Activity.Current;
+            Assert.Null(activityWithinCommand);
+
+            await _session.Execute(TestDb, async client => {
+                await Task.Yield();
+
+                activityWithinCommand = Activity.Current;
+            });
+
+            Assert.NotNull(activityWithinCommand);
+        }
     }
 }

@@ -15,14 +15,13 @@ namespace LowKey.Data.Diagnostics
             _commandSession = commandSession;
         }
 
-        public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
+        public Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
             using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
             activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
 
-            // Don't return a task here or it will not be executed inside of the ActivitySource!
-            await _commandSession.Execute(db, command, cancellation);
+            return _commandSession.Execute(db, command, cancellation);
         }
     }
 }

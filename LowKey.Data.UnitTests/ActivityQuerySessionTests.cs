@@ -64,6 +64,23 @@ namespace LowKey.Data.UnitTests
             Assert.Empty(_activity?.TagObjects);
         }
 
+        [Fact]
+        public async Task ActivityIsPresentWithinExecutionOfQuery()
+        {
+            Activity? activityWithinQuery = Activity.Current;
+            Assert.Null(activityWithinQuery);
+
+            await _session.Execute(TestDb, async client => {
+                await Task.Yield();
+
+                activityWithinQuery = Activity.Current;
+                
+                return Task.FromResult(string.Empty); 
+            });
+
+            Assert.NotNull(activityWithinQuery);
+        }
+
         void TestTag(string key, string expectedValue)
         {
             if (_activity == null) throw new Exception("Activity null");

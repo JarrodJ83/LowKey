@@ -15,7 +15,7 @@ namespace LowKey.Data.Diagnostics
             _querySession = querySession;
         }
 
-        public async Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
+        public Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
             using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
@@ -26,8 +26,7 @@ namespace LowKey.Data.Diagnostics
                 activity?.SetTag(LowKeyDataActivityTags.QueryResultType, typeof(TResult).FullName);
             }
 
-            // Don't return a task here or it will not be executed inside of the ActivitySource!
-            return await _querySession.Execute(db, query, cancellation);
+            return _querySession.Execute(db, query, cancellation);
         }
     }
 }
