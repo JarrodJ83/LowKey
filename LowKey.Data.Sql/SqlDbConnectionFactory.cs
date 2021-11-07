@@ -16,7 +16,12 @@ namespace LowKey.Data.Sql
         public Task<DbConnection> CreateForStore(Db db)
         {
             _sqlConnectionStringBuilder.InitialCatalog = db.Name;
-            _sqlConnectionStringBuilder.DataSource = $"{db.Server}:{db.Port}";
+            _sqlConnectionStringBuilder.DataSource = db.Server;
+                
+            if(db.Port.HasValue)
+            {
+                _sqlConnectionStringBuilder.DataSource += $":{db.Port}";
+            }
 
             DbConnection connection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
             return Task.FromResult(connection);

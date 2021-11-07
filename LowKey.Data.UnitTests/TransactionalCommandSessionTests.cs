@@ -16,10 +16,10 @@ namespace LowKey.Data.UnitTests
         public TransactionalCommandSessionTests()
         {
             _decoratedCommandSession = new TestCommandSession();
-            _commandSession = new TransactionalCommandSession<TestClient>(_decoratedCommandSession, TransactionScopeOption.Required, new TransactionOptions
+            _commandSession = new TransactionalCommandSession<TestClient>(_decoratedCommandSession, new TransactionSettings(TransactionScopeOption.Required, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted
-            });
+            }));
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace LowKey.Data.UnitTests
                 Timeout = TimeSpan.MaxValue
             };
 
-            _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), transactionScopeOptions, transactionOptions);
+            _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), new TransactionSettings(transactionScopeOptions, transactionOptions));
 
             return _commandSession.Execute(TestDb, client =>
             {
