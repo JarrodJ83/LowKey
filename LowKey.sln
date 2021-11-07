@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data", "LowKey.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Sql", "LowKey.Data.Sql\LowKey.Data.Sql.csproj", "{3476403F-8BD9-4880-877E-E20CF3FFAEFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LowKey.Extensions.Hosting", "LowKey.Extensions.Hosting\LowKey.Extensions.Hosting.csproj", "{50E9EC23-AACA-40B0-AF8A-6F427351EB23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Extensions.Hosting", "LowKey.Extensions.Hosting\LowKey.Extensions.Hosting.csproj", "{50E9EC23-AACA-40B0-AF8A-6F427351EB23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LowKey.Data.Example.Net5WebApp", "LowKey.Data.Example.Net5WebApp\LowKey.Data.Example.Net5WebApp.csproj", "{EC8A955E-F20A-4EC4-8547-F93BB22998E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Example.Net5WebApp", "LowKey.Data.Example.Net5WebApp\LowKey.Data.Example.Net5WebApp.csproj", "{EC8A955E-F20A-4EC4-8547-F93BB22998E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A1A6279D-DCB2-47E2-8083-71649151B48C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{F87812C4-C556-473C-92CC-EBE7F75D279F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +46,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B4E5DCF3-1C7D-4753-BE41-8EEF7BFA6936} = {F87812C4-C556-473C-92CC-EBE7F75D279F}
+		{EC8A955E-F20A-4EC4-8547-F93BB22998E4} = {A1A6279D-DCB2-47E2-8083-71649151B48C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D6BB488-3ADA-4F10-A65C-56EB22043C70}
