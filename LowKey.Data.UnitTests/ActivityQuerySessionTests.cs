@@ -8,7 +8,7 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class ActivityQuerySessionTests
+    public class ActivityQuerySessionTests : IDisposable
     {
         Db TestDb = new("TestDb", "test.server", 0);
         IQuerySession<TestClient> _session;
@@ -22,7 +22,7 @@ namespace LowKey.Data.UnitTests
             _session = new ActivityQuerySession<TestClient>(new Session<TestClient>(_clientFactory));
             _activityListener = new ActivityListener
             {
-                ShouldListenTo = _ => true,
+                ShouldListenTo = source => source.Name.Equals(ActivitySourceNames.QuerySessionActivityName),
                 Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
                 ActivityStarted = activity => _activity = activity
             };
@@ -35,7 +35,7 @@ namespace LowKey.Data.UnitTests
             await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
 
             Assert.NotNull(_activity);
-            Assert.Equal(ActivitySourceNames.SessionActivityName, _activity?.Source.Name);
+            Assert.Equal(ActivitySourceNames.QuerySessionActivityName, _activity?.Source.Name);
             Assert.Equal($"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Query", _activity?.OperationName);
         }
 
@@ -92,6 +92,12 @@ namespace LowKey.Data.UnitTests
             KeyValuePair<string, object?> tag = _activity.TagObjects.Single(tag => tag.Key.Equals(key));
             string actual = tag.Value?.ToString() ?? string.Empty;
             Assert.True(expectedValue.Equals(actual), $"Tag {key}\nExpected: {expectedValue}\nActual:  {actual}");
+        }
+
+        public void Dispose()
+        {
+            _activity?.Dispose();
+            _activityListener.Dispose();
         }
     }
 }

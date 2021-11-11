@@ -17,7 +17,7 @@ namespace LowKey.Data.Diagnostics
 
         public Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
-            using Activity? activity = ActivitySources.SessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
+            using Activity? activity = ActivitySources.CommandSessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
             activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
 

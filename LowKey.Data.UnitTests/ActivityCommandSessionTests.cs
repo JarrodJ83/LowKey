@@ -8,7 +8,7 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class ActivityCommandSessionTests
+    public class ActivityCommandSessionTests : IDisposable
     {
         Db TestDb = new("TestDb", "test.server", 0);
         ICommandSession<TestClient> _session;
@@ -22,7 +22,7 @@ namespace LowKey.Data.UnitTests
             _session = new ActivityCommandSession<TestClient>(new Session<TestClient>(_clientFactory));
             _activityListener = new ActivityListener
             {
-                ShouldListenTo = _ => true,
+                ShouldListenTo = source => source.Name == ActivitySourceNames.CommandSessionActivityName,
                 Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
                 ActivityStarted = activity => _commandActivity = activity
             };
@@ -35,7 +35,7 @@ namespace LowKey.Data.UnitTests
             await _session.Execute(TestDb, client => Task.CompletedTask);
 
             Assert.NotNull(_commandActivity);
-            Assert.Equal(ActivitySourceNames.SessionActivityName, _commandActivity?.Source.Name);
+            Assert.Equal(ActivitySourceNames.CommandSessionActivityName, _commandActivity?.Source.Name);
             Assert.Equal($"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Command", _commandActivity?.OperationName);
         }
 
@@ -87,6 +87,12 @@ namespace LowKey.Data.UnitTests
             });
 
             Assert.NotNull(activityWithinCommand);
+        }
+
+        public void Dispose()
+        {
+            _activityListener.Dispose();
+            _commandActivity?.Dispose();
         }
     }
 }
