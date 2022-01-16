@@ -18,19 +18,19 @@ namespace Microsoft.Extensions.Hosting
                 services.AddSingleton(tenant.GetType(), tenant);
             }
             
-            services.AddScoped(typeof(IQuerySession<>), typeof(Session<>));
-            services.AddScoped(typeof(ICommandSession<>), typeof(Session<>));
+            services.AddScoped(typeof(ITenantedQuerySession<>), typeof(TenantedSession<>));
+            services.AddScoped(typeof(ITenantedCommandSession<>), typeof(TenantedSession<>));
 
             if(lowKeyDataOptions?.EnableDiagnosticActivities == true)
             {
-                services.Decorate(typeof(IQuerySession<>), typeof(ActivityQuerySession<>));
-                services.Decorate(typeof(ICommandSession<>), typeof(ActivityCommandSession<>));
+                services.Decorate(typeof(ITenantedQuerySession<>), typeof(ActivityTenantedQuerySession<>));
+                services.Decorate(typeof(ITenantedCommandSession<>), typeof(ActivityTenantedCommandSession<>));
             }
 
             if(lowKeyDataOptions?.CommandOptions?.TransactionSettings is not null)
             {
                 services.AddSingleton(lowKeyDataOptions.CommandOptions.TransactionSettings);
-                services.Decorate(typeof(ICommandSession<>), typeof(TransactionalCommandSession<>));
+                services.Decorate(typeof(ITenantedCommandSession<>), typeof(TransactionalTenantedCommandSession<>));
             }
 
             return services;

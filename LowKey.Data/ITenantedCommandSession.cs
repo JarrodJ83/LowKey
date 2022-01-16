@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
-    public interface ICommandSession<TClient>
+    public interface ITenantedCommandSession<TClient>
     {
         Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task> command, CancellationToken cancellation = default);
     }

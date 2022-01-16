@@ -7,17 +7,17 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class TransactionalCommandSessionTests
+    public class TransactionalTenantedCommandSessionTests
     {
-        TransactionalCommandSession<TestClient> _commandSession;
+        TransactionalTenantedCommandSession<TestClient> _commandSession;
         TestCommandSession _decoratedCommandSession;
         Tenant TestTenant = new("TestDb", "test.server", 0);
         DataStoreId TestDataStore = new("Test");
 
-        public TransactionalCommandSessionTests()
+        public TransactionalTenantedCommandSessionTests()
         {
             _decoratedCommandSession = new TestCommandSession();
-            _commandSession = new TransactionalCommandSession<TestClient>(_decoratedCommandSession, new TransactionSettings(TransactionScopeOption.Required, new TransactionOptions
+            _commandSession = new TransactionalTenantedCommandSession<TestClient>(_decoratedCommandSession, new TransactionSettings(TransactionScopeOption.Required, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted
             }));
@@ -43,7 +43,7 @@ namespace LowKey.Data.UnitTests
                 Timeout = TimeSpan.MaxValue
             };
 
-            _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), new TransactionSettings(transactionScopeOptions, transactionOptions));
+            _commandSession = new TransactionalTenantedCommandSession<TestClient>(new TestCommandSession(), new TransactionSettings(transactionScopeOptions, transactionOptions));
 
             return _commandSession.Execute(TestDataStore, TestTenant, client =>
             {
@@ -83,7 +83,7 @@ namespace LowKey.Data.UnitTests
         }
     }
 
-    class TestCommandSession : ICommandSession<TestClient>
+    class TestCommandSession : ITenantedCommandSession<TestClient>
     {
         public bool Executed = false;
 

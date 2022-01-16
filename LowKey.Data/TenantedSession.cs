@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
-    public class Session<TClient> : ICommandSession<TClient>, IQuerySession<TClient>
+    public class TenantedSession<TClient> : ITenantedCommandSession<TClient>, ITenantedQuerySession<TClient>
     {
         IClientFactory<TClient> _clientFactory;
 
-        public Session(IClientFactory<TClient> clientFactory)
+        public TenantedSession(IClientFactory<TClient> clientFactory)
         {
             _clientFactory = clientFactory;
         }

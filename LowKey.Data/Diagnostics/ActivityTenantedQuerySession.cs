@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data.Diagnostics
 {
-    public class ActivityQuerySession<TClient> : IQuerySession<TClient>
+    public class ActivityTenantedQuerySession<TClient> : ITenantedQuerySession<TClient>
     {
-        private readonly IQuerySession<TClient> _querySession;
+        private readonly ITenantedQuerySession<TClient> _querySession;
         private const string Operation = "Query";
         
-        public ActivityQuerySession(IQuerySession<TClient> querySession)
+        public ActivityTenantedQuerySession(ITenantedQuerySession<TClient> querySession)
         {
             _querySession = querySession;
         }

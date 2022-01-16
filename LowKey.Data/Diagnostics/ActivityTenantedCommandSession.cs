@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data.Diagnostics
 {
-    public class ActivityCommandSession<TClient> : ICommandSession<TClient>
+    public class ActivityTenantedCommandSession<TClient> : ITenantedCommandSession<TClient>
     {
-        private readonly ICommandSession<TClient> _commandSession;
+        private readonly ITenantedCommandSession<TClient> _commandSession;
         private const string Operation = "Command";
 
-        public ActivityCommandSession(ICommandSession<TClient> commandSession)
+        public ActivityTenantedCommandSession(ITenantedCommandSession<TClient> commandSession)
         {
             _commandSession = commandSession;
         }

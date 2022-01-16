@@ -9,10 +9,10 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly ICommandSession<DbConnection> _connSession;
+        private readonly ITenantedCommandSession<DbConnection> _connSession;
         private readonly CoreDb _coreDb;
 
-        public IndexModel(ILogger<IndexModel> logger, ICommandSession<DbConnection> connSession, CoreDb coreDb)
+        public IndexModel(ILogger<IndexModel> logger, ITenantedCommandSession<DbConnection> connSession, CoreDb coreDb)
         {
             _connSession = connSession;
             _logger = logger;

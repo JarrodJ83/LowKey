@@ -3,17 +3,17 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class SessionTests
+    public class TenantedSessionTests
     {
         DataStoreId TestDataStore = new DataStoreId("Test");
         Tenant TestTenant = new("", "", 0);
-        Session<TestClient> _session;
+        TenantedSession<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
 
-        public SessionTests()
+        public TenantedSessionTests()
         {
             _clientFactory = new TestClientFactory();
-            _session = new Session<TestClient>(_clientFactory);
+            _session = new TenantedSession<TestClient>(_clientFactory);
         }
 
         [Fact]

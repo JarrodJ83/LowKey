@@ -8,19 +8,19 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class ActivityCommandSessionTests : IDisposable
+    public class ActivityTenantedCommandSessionTests : IDisposable
     {
         DataStoreId TestDataStore = new("TestDataStore");
         Tenant TestTenant = new("TestDb", "test.server", 0);
-        ICommandSession<TestClient> _session;
+        ITenantedCommandSession<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
         Activity? _commandActivity;
         ActivityListener _activityListener;
 
-        public ActivityCommandSessionTests()
+        public ActivityTenantedCommandSessionTests()
         {
             _clientFactory = new TestClientFactory();
-            _session = new ActivityCommandSession<TestClient>(new Session<TestClient>(_clientFactory));
+            _session = new ActivityTenantedCommandSession<TestClient>(new TenantedSession<TestClient>(_clientFactory));
             _activityListener = new ActivityListener
             {
                 ShouldListenTo = source => source.Name == ActivitySourceNames.CommandSessionActivityName,
@@ -37,7 +37,7 @@ namespace LowKey.Data.UnitTests
 
             Assert.NotNull(_commandActivity);
             Assert.Equal(ActivitySourceNames.CommandSessionActivityName, _commandActivity?.Source.Name);
-            Assert.Equal($"{nameof(ICommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Command", _commandActivity?.OperationName);
+            Assert.Equal($"{nameof(ITenantedCommandSession<TestClient>.Execute)} {typeof(TestClient).FullName} Command", _commandActivity?.OperationName);
         }
 
         [Fact]

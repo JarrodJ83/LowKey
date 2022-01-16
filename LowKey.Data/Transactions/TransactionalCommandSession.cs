@@ -17,12 +17,12 @@ namespace LowKey.Data.Transactions
         }        
     }
 
-    public class TransactionalCommandSession<TClient> : ICommandSession<TClient>
+    public class TransactionalTenantedCommandSession<TClient> : ITenantedCommandSession<TClient>
     {
         private readonly TransactionSettings _settings;
-        private readonly ICommandSession<TClient> _commandSession;
+        private readonly ITenantedCommandSession<TClient> _commandSession;
         
-        public TransactionalCommandSession(ICommandSession<TClient> commandSession, TransactionSettings settings)
+        public TransactionalTenantedCommandSession(ITenantedCommandSession<TClient> commandSession, TransactionSettings settings)
         {
             _settings = settings;
             _commandSession = commandSession;
