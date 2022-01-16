@@ -10,7 +10,8 @@ namespace LowKey.Data.UnitTests
 {
     public class ActivityQuerySessionTests : IDisposable
     {
-        Db TestDb = new("TestDb", "test.server", 0);
+        DataStoreId TestDataStore = new("Test");
+        Tenant TestTenant = new("TestDb", "test.server", 0);
         IQuerySession<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
         Activity? _activity;
@@ -32,7 +33,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task QueryActivityIsTraced()
         {
-            await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
+            await _session.Execute(TestDataStore, TestTenant, client => Task.FromResult(string.Empty));
 
             Assert.NotNull(_activity);
             Assert.Equal(ActivitySourceNames.QuerySessionActivityName, _activity?.Source.Name);
@@ -42,11 +43,11 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task QueryActivityHasCorrectTags()
         {
-            await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
+            await _session.Execute(TestDataStore, TestTenant, client => Task.FromResult(string.Empty));
 
-            TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestDb.Name);
-            TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestDb.Server);
-            TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestDb.Port.ToString());
+            TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Name);
+            TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestTenant.Server);
+            TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestTenant.Port.ToString());
             TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, "Query");
 #pragma warning disable CS8604 // Possible null reference argument.
             TestTag(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName);
@@ -59,7 +60,7 @@ namespace LowKey.Data.UnitTests
         {
             _activityListener.Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.PropagationData;
 
-            await _session.Execute(TestDb, client => Task.FromResult(string.Empty));
+            await _session.Execute(TestDataStore, TestTenant, client => Task.FromResult(string.Empty));
 
             Assert.Empty(_activity?.TagObjects);
         }
@@ -70,7 +71,7 @@ namespace LowKey.Data.UnitTests
             Activity? activityWithinQuery = Activity.Current;
             Assert.Null(activityWithinQuery);
 
-            await _session.Execute(TestDb, async client => {
+            await _session.Execute(TestDataStore, TestTenant, async client => {
                 await Task.Yield();
 
                 activityWithinQuery = Activity.Current;

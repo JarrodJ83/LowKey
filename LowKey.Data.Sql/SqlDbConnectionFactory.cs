@@ -13,14 +13,14 @@ namespace LowKey.Data.Sql
             _sqlConnectionStringBuilder = sqlConnectionStringBuilder;
         }
 
-        public Task<DbConnection> CreateForStore(Db db)
+        public Task<DbConnection> CreateForStore(Tenant tenant)
         {
-            _sqlConnectionStringBuilder.InitialCatalog = db.Name;
-            _sqlConnectionStringBuilder.DataSource = db.Server;
+            _sqlConnectionStringBuilder.InitialCatalog = tenant.Name;
+            _sqlConnectionStringBuilder.DataSource = tenant.Server;
                 
-            if(db.Port.HasValue)
+            if(tenant.Port.HasValue)
             {
-                _sqlConnectionStringBuilder.DataSource += $":{db.Port}";
+                _sqlConnectionStringBuilder.DataSource += $":{tenant.Port}";
             }
 
             DbConnection connection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);

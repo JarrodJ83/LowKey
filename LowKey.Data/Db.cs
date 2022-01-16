@@ -1,4 +1,5 @@
 ﻿namespace LowKey.Data
 {
-    public record Db(string Name, string Server, int? Port = null);
+    public record DataStoreId(string Name);
+    public record Tenant(string Name, string Server, int? Port = null);
 }

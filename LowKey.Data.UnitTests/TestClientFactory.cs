@@ -4,9 +4,9 @@ namespace LowKey.Data.UnitTests
 {
     class TestClientFactory : IClientFactory<TestClient>
     {
-        public Task<TestClient> CreateForStore(Db db)
+        public Task<TestClient> CreateForStore(Tenant tenant)
         {
-            return Task.FromResult(new TestClient(db));
+            return Task.FromResult(new TestClient(tenant));
         }
     }
 }

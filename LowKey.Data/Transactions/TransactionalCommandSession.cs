@@ -28,10 +28,10 @@ namespace LowKey.Data.Transactions
             _commandSession = commandSession;
         }
 
-        public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
+        public async Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
             using var trxScope = new TransactionScope(_settings.TransactionScopeOption, _settings.TransactionOptions, TransactionScopeAsyncFlowOption.Enabled);
-            await _commandSession.Execute(db, command, cancellation);
+            await _commandSession.Execute(dataStoreId, tenant, command, cancellation);
             trxScope.Complete();
         }
     }

@@ -6,6 +6,6 @@ namespace LowKey.Data
 {
     public interface IQuerySession<TClient>
     {
-        Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default);
+        Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default);
     }
 }

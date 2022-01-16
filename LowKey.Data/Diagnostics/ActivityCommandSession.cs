@@ -15,13 +15,13 @@ namespace LowKey.Data.Diagnostics
             _commandSession = commandSession;
         }
 
-        public Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
+        public Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
             using Activity? activity = ActivitySources.CommandSessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
-            activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
+            activity.SetLowKeyActivityTags(dataStoreId, tenant, typeof(TClient), Operation);
 
-            return _commandSession.Execute(db, command, cancellation);
+            return _commandSession.Execute(dataStoreId, tenant, command, cancellation);
         }
     }
 }

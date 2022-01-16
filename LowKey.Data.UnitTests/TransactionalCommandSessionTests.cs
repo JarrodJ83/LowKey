@@ -11,7 +11,8 @@ namespace LowKey.Data.UnitTests
     {
         TransactionalCommandSession<TestClient> _commandSession;
         TestCommandSession _decoratedCommandSession;
-        Db TestDb = new("TestDb", "test.server", 0);
+        Tenant TestTenant = new("TestDb", "test.server", 0);
+        DataStoreId TestDataStore = new("Test");
 
         public TransactionalCommandSessionTests()
         {
@@ -25,7 +26,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task TransactionIsPresentWithinCommandHandler()
         {
-            await _commandSession.Execute(TestDb, client =>
+            await _commandSession.Execute(TestDataStore, TestTenant, client =>
             {
                 Assert.NotNull(Transaction.Current);
                 return Task.CompletedTask;
@@ -44,7 +45,7 @@ namespace LowKey.Data.UnitTests
 
             _commandSession = new TransactionalCommandSession<TestClient>(new TestCommandSession(), new TransactionSettings(transactionScopeOptions, transactionOptions));
 
-            return _commandSession.Execute(TestDb, client =>
+            return _commandSession.Execute(TestDataStore, TestTenant, client =>
             {
                 Assert.Equal(transactionOptions.IsolationLevel, Transaction.Current?.IsolationLevel);
                 return Task.CompletedTask;
@@ -56,7 +57,7 @@ namespace LowKey.Data.UnitTests
         {
             TransactionStatus? transactionStatus = null;
 
-            await _commandSession.Execute(TestDb, client =>
+            await _commandSession.Execute(TestDataStore, TestTenant, client =>
             {
                 if (Transaction.Current is not null)
                 {
@@ -76,7 +77,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task DecoratedCommandSessionIsInvoked()
         {
-            await _commandSession.Execute(TestDb, client => Task.CompletedTask);
+            await _commandSession.Execute(TestDataStore, TestTenant, client => Task.CompletedTask);
 
             Assert.True(_decoratedCommandSession.Executed);
         }
@@ -86,10 +87,10 @@ namespace LowKey.Data.UnitTests
     {
         public bool Executed = false;
 
-        public Task Execute(Db db, Func<TestClient, Task> command, CancellationToken cancellation = default)
+        public Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TestClient, Task> command, CancellationToken cancellation = default)
         {
             Executed = true;
-            return command(new TestClient(db));
+            return command(new TestClient(tenant));
         }
     }
 }

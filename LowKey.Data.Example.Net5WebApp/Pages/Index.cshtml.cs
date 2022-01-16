@@ -21,7 +21,7 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
 
         public async Task OnGet()
         {
-            await _connSession.Execute(_coreDb, conn => conn.QueryAsync("select 1"));
+            await _connSession.Execute(new DataStoreId("coredb"), _coreDb, conn => conn.QueryAsync("select 1"));
         }
     }
 }

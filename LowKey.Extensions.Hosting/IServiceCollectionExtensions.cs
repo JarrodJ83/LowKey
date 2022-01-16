@@ -8,14 +8,14 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Db db, LowKeyDataOptions? lowKeyDataOptions = default) =>
-            AddLowKeyData(services, new Db[] { db }, lowKeyDataOptions);
+        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Tenant tenant, LowKeyDataOptions? lowKeyDataOptions = default) =>
+            AddLowKeyData(services, new Tenant[] { tenant }, lowKeyDataOptions);
 
-        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Db[] dbs, LowKeyDataOptions? lowKeyDataOptions = default)
+        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Tenant[] tenants, LowKeyDataOptions? lowKeyDataOptions = default)
         {
-            foreach(var db in dbs)
+            foreach(var tenant in tenants)
             {
-                services.AddSingleton(db.GetType(), db);
+                services.AddSingleton(tenant.GetType(), tenant);
             }
             
             services.AddScoped(typeof(IQuerySession<>), typeof(Session<>));

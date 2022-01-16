@@ -5,7 +5,8 @@ namespace LowKey.Data.UnitTests
 {
     public class SessionTests
     {
-        Db TestDb = new("", "", 0);
+        DataStoreId TestDataStore = new DataStoreId("Test");
+        Tenant TestTenant = new("", "", 0);
         Session<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
 
@@ -20,7 +21,7 @@ namespace LowKey.Data.UnitTests
         {
             TestClient? testClient = null;
 
-            await _session.Execute(TestDb, client => {
+            await _session.Execute(TestDataStore, TestTenant, client => {
                 testClient = client;
                 return Task.CompletedTask;
             });
@@ -33,7 +34,7 @@ namespace LowKey.Data.UnitTests
         {
             TestClient? testClient = null;
 
-            var result = await _session.Execute(TestDb, client => {
+            var result = await _session.Execute(TestDataStore, TestTenant, client => {
                 testClient = client;
                 return Task.FromResult(new TestResult());
             });
@@ -41,7 +42,7 @@ namespace LowKey.Data.UnitTests
             Assert.NotNull(testClient);
             Assert.NotNull(result);
         }
-        
+
         record TestResult;
     }
 }

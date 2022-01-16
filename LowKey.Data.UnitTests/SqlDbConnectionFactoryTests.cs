@@ -16,12 +16,12 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task ConnectionIsForCorrectDatabase(Db testDb)
+        public async Task ConnectionIsForCorrectDatabase(Tenant tenant)
         {
-            DbConnection conn = await _dbConnFactory.CreateForStore(testDb);
+            DbConnection conn = await _dbConnFactory.CreateForStore(tenant);
 
             Assert.NotNull(conn);
-            Assert.Equal(conn.Database, testDb.Name);
+            Assert.Equal(conn.Database, tenant.Name);
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(conn.ConnectionString);
 
@@ -29,8 +29,8 @@ namespace LowKey.Data.UnitTests
             string server = datasourceParts[0];
             int port = int.Parse(datasourceParts[1]);
 
-            Assert.Equal(server, testDb.Server);
-            Assert.Equal(port, testDb.Port);
+            Assert.Equal(server, tenant.Server);
+            Assert.Equal(port, tenant.Port);
         }
     }
 }

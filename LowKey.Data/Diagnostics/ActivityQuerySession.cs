@@ -15,18 +15,18 @@ namespace LowKey.Data.Diagnostics
             _querySession = querySession;
         }
 
-        public Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
+        public Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
             using Activity? activity = ActivitySources.QuerySessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
 
-            activity.SetLowKeyActivityTags(db, typeof(TClient), Operation);
+            activity.SetLowKeyActivityTags(dataStoreId, tenant, typeof(TClient), Operation);
 
             if (activity?.IsAllDataRequested == true)
             {
                 activity?.SetTag(LowKeyDataActivityTags.QueryResultType, typeof(TResult).FullName);
             }
 
-            return _querySession.Execute(db, query, cancellation);
+            return _querySession.Execute(dataStoreId, tenant, query, cancellation);
         }
     }
 }

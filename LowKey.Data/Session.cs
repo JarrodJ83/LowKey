@@ -13,15 +13,15 @@ namespace LowKey.Data
             _clientFactory = clientFactory;
         }
 
-        public async Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default)
+        public async Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
-            TClient client = await _clientFactory.CreateForStore(db);
+            TClient client = await _clientFactory.CreateForStore(tenant);
             await command(client);
         }
 
-        public async Task<TResult> Execute<TResult>(Db db, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
+        public async Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
-            TClient client = await _clientFactory.CreateForStore(db);
+            TClient client = await _clientFactory.CreateForStore(tenant);
             return await query(client);
         }
     }

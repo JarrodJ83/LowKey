@@ -6,6 +6,6 @@ namespace LowKey.Data
 {
     public interface ICommandSession<TClient>
     {
-        Task Execute(Db db, Func<TClient, Task> command, CancellationToken cancellation = default);
+        Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task> command, CancellationToken cancellation = default);
     }
 }

@@ -21,7 +21,7 @@ namespace LowKey.Data.Example.Net5WebApp
             connBuilder.UserID = Configuration.GetValue<string>("SQL_USERNAME");
             connBuilder.Password = Configuration.GetValue<string>("SQL_PASSWORD");
 
-            services.AddLowKeyData(new Db(Configuration.GetValue<string>("SQL_DATABASE"), Configuration.GetValue<string>("SQL_SERVER"))).WithSqlServer(connBuilder);
+            services.AddLowKeyData(new Tenant(Configuration.GetValue<string>("SQL_DATABASE"), Configuration.GetValue<string>("SQL_SERVER"))).WithSqlServer(connBuilder);
             
             services.AddRazorPages();
         }
