@@ -15,11 +15,7 @@ namespace LowKey.Data.Example.Net5WebApp
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
-                    var connBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-                    connBuilder.UserID = "devpowertrack";
-                    connBuilder.Password = "devpass";
-
-                    services.AddLowKeyData(new CoreDb()).WithSqlServer(connBuilder);
+                    
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

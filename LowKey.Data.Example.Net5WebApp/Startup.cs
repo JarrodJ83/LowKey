@@ -15,9 +15,14 @@ namespace LowKey.Data.Example.Net5WebApp
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
+            connBuilder.UserID = Configuration.GetValue<string>("SQL_USERNAME");
+            connBuilder.Password = Configuration.GetValue<string>("SQL_PASSWORD");
+
+            services.AddLowKeyData(new Db(Configuration.GetValue<string>("SQL_DATABASE"), Configuration.GetValue<string>("SQL_SERVER"))).WithSqlServer(connBuilder);
+            
             services.AddRazorPages();
         }
 

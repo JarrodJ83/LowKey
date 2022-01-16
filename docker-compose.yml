@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  lowkey.data.example.net5webapp:
+    image: ${DOCKER_REGISTRY-}lowkeydataexamplenet5webapp
+    build:
+      context: .
+      dockerfile: LowKey.Data.Example.Net5WebApp/Dockerfile
+    environment:
+      SQL_USERNAME: sa
+      SQL_PASSWORD: "Your_password123"
+      SQL_DATABASE: master
+      SQL_SERVER: sql
+  sql:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
