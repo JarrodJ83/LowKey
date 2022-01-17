@@ -28,7 +28,7 @@ namespace LowKey.Data
         async Task<TClient> GetClientFor(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
         {
             var clientFactory = await _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId, cancellation);
-            return await clientFactory.CreateForStore(tenant);
+            return await clientFactory.CreateForStore(dataStoreId, tenant);
         }
     }
 }

@@ -50,8 +50,6 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task ClientNotRegisteredForDataStoreThrowsException()
         {
-            TestClient? testClient = null;
-
             await Assert.ThrowsAsync<InvalidOperationException>(() => _session.Execute(TestDataStore, TestTenant, client => {
                 return Task.FromResult(new TestResult());
             }));

@@ -90,7 +90,7 @@ namespace LowKey.Data.UnitTests
         public Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TestClient, Task> command, CancellationToken cancellation = default)
         {
             Executed = true;
-            return command(new TestClient(tenant));
+            return command(new TestClient(dataStoreId, tenant));
         }
     }
 }
