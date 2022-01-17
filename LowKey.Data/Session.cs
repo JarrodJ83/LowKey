@@ -4,18 +4,22 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
-    public class Session<TClient> : IQuerySession<TClient>
+    public partial class Session<TClient> : IQuerySession<TClient>
     {
-        IClientFactory<TClient> _clientFactory;
+        private readonly ITenantedQuerySession<TClient> _tenantedQuerySession;
+        private readonly DataStoreTanantResolverRegistry _dataStoreTanantResolverRegistry;
 
-        public Session(IClientFactory<TClient> clientFactory)
+        public Session(ITenantedQuerySession<TClient> tenantedQuerySession, DataStoreTanantResolverRegistry dataStoreTanantResolverRegistry)
         {
-            _clientFactory = clientFactory;
+            _tenantedQuerySession = tenantedQuerySession;
+            _dataStoreTanantResolverRegistry = dataStoreTanantResolverRegistry;
         }
 
-        public Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
+        public async Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
-            throw new NotImplementedException();
+            ITenantResolver tenantResolver = await _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId, cancellation);
+            Tenant tenant = await tenantResolver.Resolve(dataStoreId);
+            return await _tenantedQuerySession.Execute(dataStoreId, tenant, query, cancellation);
         }
     }
 }
