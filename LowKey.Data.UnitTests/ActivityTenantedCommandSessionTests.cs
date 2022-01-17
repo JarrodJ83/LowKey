@@ -1,4 +1,5 @@
 using LowKey.Data.Diagnostics;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,15 +13,14 @@ namespace LowKey.Data.UnitTests
     {
         DataStoreId TestDataStore = new("TestDataStore");
         Tenant TestTenant = new("TestDb", "test.server", 0);
-        ITenantedCommandSession<TestClient> _session;
-        IClientFactory<TestClient> _clientFactory;
+        ActivityTenantedCommandSession<TestClient> _session;
         Activity? _commandActivity;
         ActivityListener _activityListener;
-
         public ActivityTenantedCommandSessionTests()
         {
-            _clientFactory = new TestClientFactory();
-            _session = new ActivityTenantedCommandSession<TestClient>(new TenantedSession<TestClient>(_clientFactory));
+            var clientFactoryRegistry = new DataStoreClientFactoryRegistry();
+            clientFactoryRegistry.RegisterClientFor(TestDataStore, cancel => Task.FromResult((IClientFactory<TestClient>)new TestClientFactory()));
+            _session = new ActivityTenantedCommandSession<TestClient>(new TenantedSession<TestClient>(clientFactoryRegistry));
             _activityListener = new ActivityListener
             {
                 ShouldListenTo = source => source.Name == ActivitySourceNames.CommandSessionActivityName,
