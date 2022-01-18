@@ -7,18 +7,17 @@ using Xunit;
 
 namespace LowKey.Data.UnitTests
 {
-    public class SessionTests
+    public class QuerySessionTests
     {
-        DataStoreId TestDataStore = new DataStoreId("Test");
-        Session<TestClient> _session;
+        QuerySession<TestClient> _session;
         Mock<ITenantedQuerySession<TestClient>> _tenantedQuerySession;
         DataStoreTanantResolverRegistry _dataStoreTenantResolverRegistry;
 
-        public SessionTests()
+        public QuerySessionTests()
         {
             _dataStoreTenantResolverRegistry = new DataStoreTanantResolverRegistry();
             _tenantedQuerySession = new Mock<ITenantedQuerySession<TestClient>>();
-            _session = new Session<TestClient>(_tenantedQuerySession.Object, _dataStoreTenantResolverRegistry);
+            _session = new QuerySession<TestClient>(_tenantedQuerySession.Object, _dataStoreTenantResolverRegistry);
         }
 
         [Theory, AutoData]
@@ -59,7 +58,7 @@ namespace LowKey.Data.UnitTests
                 _tenant = tenant;
             }
 
-            public Task<Tenant> Resolve(DataStoreId dataStoreId) => Task.FromResult(_tenant);
+            public Task<Tenant> Resolve(DataStoreId dataStoreId, CancellationToken cancel = default) => Task.FromResult(_tenant);
         }
     }
 }
