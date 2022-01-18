@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
-    class CommandSession<TClient> : ICommandSession<TClient>
+    public class CommandSession<TClient> : ICommandSession<TClient>
     {
         private readonly ITenantedCommandSession<TClient> _tenantedCommandSession;
         private readonly DataStoreTanantResolverRegistry _dataStoreTanantResolverRegistry;
