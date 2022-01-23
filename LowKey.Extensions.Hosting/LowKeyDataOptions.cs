@@ -1,5 +1,4 @@
 ﻿using LowKey.Data.Transactions;
-using System.Transactions;
 
 namespace LowKey.Extensions.Hosting
 {

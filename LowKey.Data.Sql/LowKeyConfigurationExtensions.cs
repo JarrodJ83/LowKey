@@ -1,7 +1,6 @@
 ﻿using LowKey.Data;
 using LowKey.Data.Sql;
 using LowKey.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;

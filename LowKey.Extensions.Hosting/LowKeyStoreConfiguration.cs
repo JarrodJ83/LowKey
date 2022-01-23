@@ -1,6 +1,4 @@
-﻿using LowKey.Data;
-
-namespace LowKey.Extensions.Hosting
+﻿namespace LowKey.Extensions.Hosting
 {
     class LowKeyStoreConfiguration
     {        
