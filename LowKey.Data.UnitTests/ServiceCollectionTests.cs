@@ -67,7 +67,7 @@ namespace LowKey.Data.UnitTests
                 lowKey.AddStore(dataStoreId.Value,
                     cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
                     cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()))
-                    .WithTestClient(dataStoreId);
+                    .WithTestClient();
             });
 
             var querySession = _services.BuildServiceProvider().GetService<IQuerySession<TestClient>>();
