@@ -14,6 +14,9 @@ namespace Microsoft.Extensions.Hosting
             services.AddScoped(typeof(ITenantedQuerySession<>), typeof(TenantedSession<>));
             services.AddScoped(typeof(ITenantedCommandSession<>), typeof(TenantedSession<>));
 
+            services.AddScoped(typeof(IQuerySession<>), typeof(QuerySession<>));
+            services.AddScoped(typeof(ICommandSession<>), typeof(CommandSession<>));
+
             if (lowKeyDataOptions?.EnableDiagnosticActivities == true)
             {
                 services.Decorate(typeof(ITenantedQuerySession<>), typeof(ActivityTenantedQuerySession<>));
@@ -31,6 +34,8 @@ namespace Microsoft.Extensions.Hosting
             configuration(config);
 
             services.AddSingleton(config);
+            services.AddSingleton(config.DataStoreTanantResolverRegistry);
+            services.AddSingleton(config.DataStoreClientFactoryRegistry);
 
             return services;
         }

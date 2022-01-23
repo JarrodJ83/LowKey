@@ -41,7 +41,9 @@ namespace LowKey.Data.UnitTests
             var dataStoreTenants = new Dictionary<DataStoreId, Tenant[]> { { dataStoreId, tenants } };
             _services.AddLowKeyData(lowKey =>
             {
-                lowKey.AddStore(dataStoreId.Value, cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)));
+                lowKey.AddStore(dataStoreId.Value,
+                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
+                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()));
             });
 
             var tenantResolver = await GetTenantResolverFor(dataStoreId);
@@ -52,6 +54,34 @@ namespace LowKey.Data.UnitTests
             {
                 var tenant = await tenantResolver.Resolve(dataStoreId, expectedTenant.Id);
                 Assert.Equal(expectedTenant, tenant);
+            }
+        }
+
+        [Theory, AutoData]
+        public async Task SingleDataStoreWithMulitpleTenantsQuerySession(DataStoreId dataStoreId, Tenant[] tenants)
+        {
+            var dataStoreTenants = new Dictionary<DataStoreId, Tenant[]> { { dataStoreId, tenants } };
+            _services.AddLowKeyData(lowKey =>
+            {
+                lowKey.AddStore(dataStoreId.Value,
+                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
+                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()))
+                    .WithTestClient(dataStoreId);
+            });
+
+            var querySession = _services.BuildServiceProvider().GetService<IQuerySession<TestClient>>();
+            Assert.NotNull(querySession);
+            foreach (var tenant in tenants)
+            {
+                using var tenantContext = TenantContext.CreateFor(tenant.Id);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                var result = await querySession.Execute(dataStoreId, client =>
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                {
+                    Assert.Equal(dataStoreId, client.DataStoreId);
+                    Assert.Equal(tenant, client.Tenant);
+                    return Task.FromResult(Guid.NewGuid());
+                });
             }
         }
 

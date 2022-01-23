@@ -48,19 +48,10 @@ namespace LowKey.Data.UnitTests
         private Task WhenCommandIsExecuted(DataStoreId dataStoreId) => _session.Execute<TestClient>(dataStoreId, testClient => Task.CompletedTask, CancellationToken.None);
 
         private void GivenTenantRegisteredForDataStore(DataStoreId dataStoreId, Tenant tenant) =>
-            _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId, cancel => Task.FromResult((ITenantResolver)new TestTenantResolver(tenant)));
+            _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId,
+                cancel => Task.FromResult((ITenantResolver)new SingleTenantResolver(tenant)),
+                cancel => Task.FromResult((ITenantIdResolver)new SingleTenantIdResolver(tenant.Id)));
 
         record TestResult;
-
-        class TestTenantResolver : ITenantResolver
-        {
-            private readonly Tenant _tenant;
-            public TestTenantResolver(Tenant tenant)
-            {
-                _tenant = tenant;
-            }
-
-            public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default) => Task.FromResult(_tenant);
-        }
     }
 }

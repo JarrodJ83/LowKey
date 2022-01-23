@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Data.Common;
 
 namespace LowKey.Data.Example.Net5WebApp
 {
@@ -25,8 +26,9 @@ namespace LowKey.Data.Example.Net5WebApp
 
             services.AddLowKeyData(config =>
             {
-                config.AddStore("sql", server, database);
-            }).WithSqlServer(connBuilder);
+                var dataStore = new DataStoreId("sql");
+                config.AddStore(dataStore, server, database).WithSqlServer(dataStore, connBuilder);
+            });
             
             services.AddRazorPages();
         }

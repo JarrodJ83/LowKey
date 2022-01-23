@@ -3,6 +3,17 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
+    public class SingleTenantIdResolver : ITenantIdResolver
+    {
+        private readonly TenantId _tenantId;
+        public SingleTenantIdResolver(TenantId tenantId)
+        {
+            _tenantId = tenantId;
+        }
+
+        public Task<TenantId> Resolve() => Task.FromResult(_tenantId);
+    }
+
     public class SingleTenantResolver : ITenantResolver
     {
         private readonly Tenant _tenant;

@@ -10,16 +10,14 @@ namespace LowKey.Data.UnitTests
     public class QuerySessionTests
     {
         QuerySession<TestClient> _session;
-        Mock<ITenantIdResolver> _tenantIdResolver;
         Mock<ITenantedQuerySession<TestClient>> _tenantedQuerySession;
         DataStoreTanantResolverRegistry _dataStoreTenantResolverRegistry;
 
         public QuerySessionTests()
         {
-            _tenantIdResolver = new();
             _dataStoreTenantResolverRegistry = new();
             _tenantedQuerySession = new();
-            _session = new QuerySession<TestClient>(_tenantedQuerySession.Object, _tenantIdResolver.Object, _dataStoreTenantResolverRegistry);
+            _session = new QuerySession<TestClient>(_tenantedQuerySession.Object, _dataStoreTenantResolverRegistry);
         }
 
         [Theory, AutoData]
@@ -48,19 +46,9 @@ namespace LowKey.Data.UnitTests
         private Task WhenQueryIsExecuted(DataStoreId dataStoreId) => _session.Execute(dataStoreId, testClient => Task.FromResult(new TestResult()));
 
         private void GivenTenantRegisteredForDataStore(DataStoreId dataStoreId, Tenant tenant) =>
-            _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId, cancel => Task.FromResult((ITenantResolver)new TestTenantResolver(tenant)));
+            _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId, cancel => Task.FromResult((ITenantResolver)new SingleTenantResolver(tenant)),
+                cancel => Task.FromResult((ITenantIdResolver)new SingleTenantIdResolver(tenant.Id)));
 
         record TestResult;
-
-        class TestTenantResolver : ITenantResolver
-        {
-            private readonly Tenant _tenant;
-            public TestTenantResolver(Tenant tenant)
-            {
-                _tenant = tenant;
-            }
-
-            public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default) => Task.FromResult(_tenant);
-        }
     }
 }
