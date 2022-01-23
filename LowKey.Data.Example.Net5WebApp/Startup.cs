@@ -20,8 +20,13 @@ namespace LowKey.Data.Example.Net5WebApp
             var connBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
             connBuilder.UserID = Configuration.GetValue<string>("SQL_USERNAME");
             connBuilder.Password = Configuration.GetValue<string>("SQL_PASSWORD");
+            var database = Configuration.GetValue<string>("SQL_DATABASE");
+            var server = Configuration.GetValue<string>("SQL_SERVER");
 
-            services.AddLowKeyData(new Tenant(Configuration.GetValue<string>("SQL_DATABASE"), Configuration.GetValue<string>("SQL_SERVER"))).WithSqlServer(connBuilder);
+            services.AddLowKeyData(config =>
+            {
+                config.AddStore("sql", server, database);
+            }).WithSqlServer(connBuilder);
             
             services.AddRazorPages();
         }

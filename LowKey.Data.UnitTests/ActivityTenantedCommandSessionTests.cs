@@ -45,7 +45,7 @@ namespace LowKey.Data.UnitTests
         {
             await _session.Execute(TestDataStore, TestTenant, client => Task.CompletedTask);
 
-            TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Name);
+            TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Id.Value);
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestTenant.Server);
             TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestTenant.Port?.ToString() ?? string.Empty);
             TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, $"Command");

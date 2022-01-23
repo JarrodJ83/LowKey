@@ -7,7 +7,7 @@ namespace LowKey.Data
 {
     public class DataStoreClientFactoryRegistry
     {
-        private Dictionary<DataStoreId, object> _dataStoreClientTypes = new();
+        private readonly Dictionary<DataStoreId, object> _dataStoreClientTypes = new();
 
         public void RegisterClientFor<TClient>(DataStoreId dataStore, Func<CancellationToken, Task<IClientFactory<TClient>>> clientFactoryResolver)
         {
@@ -22,7 +22,7 @@ namespace LowKey.Data
                 return resolver(cancellation);
             }
 
-            throw new InvalidOperationException($"No {nameof(IClientFactory<TClient>)} registered for \"{dataStore.Name}\" DataStore");
+            throw new InvalidOperationException($"No {nameof(IClientFactory<TClient>)} registered for \"{dataStore.Value}\" DataStore");
         }
     }
 }

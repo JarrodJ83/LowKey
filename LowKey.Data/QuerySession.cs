@@ -6,12 +6,14 @@ namespace LowKey.Data
 {
     public class QuerySession<TClient> : IQuerySession<TClient>
     {
+        private readonly ITenantIdResolver _tenantIdResolver;
         private readonly ITenantedQuerySession<TClient> _tenantedQuerySession;
         private readonly DataStoreTanantResolverRegistry _dataStoreTanantResolverRegistry;
 
-        public QuerySession(ITenantedQuerySession<TClient> tenantedQuerySession, DataStoreTanantResolverRegistry dataStoreTanantResolverRegistry)
+        public QuerySession(ITenantedQuerySession<TClient> tenantedQuerySession, ITenantIdResolver tenantIdResolver, DataStoreTanantResolverRegistry dataStoreTanantResolverRegistry)
         {
             _tenantedQuerySession = tenantedQuerySession;
+            _tenantIdResolver = tenantIdResolver;
             _dataStoreTanantResolverRegistry = dataStoreTanantResolverRegistry;
         }
 
@@ -24,7 +26,8 @@ namespace LowKey.Data
         private async Task<Tenant> ResolveTenant(DataStoreId dataStoreId, CancellationToken cancellation)
         {
             ITenantResolver tenantResolver = await _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId, cancellation);
-            Tenant tenant = await tenantResolver.Resolve(dataStoreId, cancellation);
+            var tenantId = await _tenantIdResolver.Resolve();
+            Tenant tenant = await tenantResolver.Resolve(dataStoreId, tenantId, cancellation);
             return tenant;
         }
     }

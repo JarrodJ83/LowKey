@@ -21,7 +21,7 @@ namespace LowKey.Data.UnitTests
             DbConnection conn = await _dbConnFactory.CreateForStore(dataStoreId, tenant);
 
             Assert.NotNull(conn);
-            Assert.Equal(dataStoreId.Name, conn.Database);
+            Assert.Equal(dataStoreId.Value, conn.Database);
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(conn.ConnectionString);
 

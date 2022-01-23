@@ -46,8 +46,9 @@ services.AddLowKey(lowkey =>
 })
 
 
-1. Lookup client factory for data store
-2. Lookup tenant
+
+1. Lookup tenant
+2. Lookup client factory for data store
 3. Create client for tenant
 4. Execute
 

@@ -24,7 +24,7 @@ namespace LowKey.Data
                 return tenantResolverFactory(cancel);
             }
 
-            throw new InvalidOperationException($"No {nameof(ITenantResolver)} registered for \"{dataStoreId.Name}\" DataStore");
+            throw new InvalidOperationException($"No {nameof(ITenantResolver)} registered for \"{dataStoreId.Value}\" DataStore");
         }
     }
 }

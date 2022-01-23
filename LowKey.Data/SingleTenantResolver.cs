@@ -12,6 +12,6 @@ namespace LowKey.Data
             _tenant = tenant;
         }
 
-        public Task<Tenant> Resolve(DataStoreId dataStoreId, CancellationToken cancel = default) => Task.FromResult(_tenant);
+        public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default) => Task.FromResult(_tenant);
     }
 }

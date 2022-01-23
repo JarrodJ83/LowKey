@@ -10,14 +10,16 @@ namespace LowKey.Data.UnitTests
     public class CommandSessionTests
     {
         CommandSession<TestClient> _session;
+        Mock<ITenantIdResolver> _tenantIdResolver;
         Mock<ITenantedCommandSession<TestClient>> _tenantedCommandSession;
         DataStoreTanantResolverRegistry _dataStoreTenantResolverRegistry;
 
         public CommandSessionTests()
         {
-            _dataStoreTenantResolverRegistry = new DataStoreTanantResolverRegistry();
-            _tenantedCommandSession = new Mock<ITenantedCommandSession<TestClient>>();
-            _session = new CommandSession<TestClient>(_tenantedCommandSession.Object, _dataStoreTenantResolverRegistry);
+            _tenantIdResolver = new();
+            _dataStoreTenantResolverRegistry = new();
+            _tenantedCommandSession = new();
+            _session = new CommandSession<TestClient>(_tenantedCommandSession.Object, _tenantIdResolver.Object, _dataStoreTenantResolverRegistry);
         }
 
         [Theory, AutoData]
@@ -58,7 +60,7 @@ namespace LowKey.Data.UnitTests
                 _tenant = tenant;
             }
 
-            public Task<Tenant> Resolve(DataStoreId dataStoreId, CancellationToken cancel = default) => Task.FromResult(_tenant);
+            public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default) => Task.FromResult(_tenant);
         }
     }
 }

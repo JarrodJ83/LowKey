@@ -15,7 +15,7 @@ namespace LowKey.Data.Sql
 
         public Task<DbConnection> CreateForStore(DataStoreId dataStoreId, Tenant tenant)
         {
-            _sqlConnectionStringBuilder.InitialCatalog = dataStoreId.Name;
+            _sqlConnectionStringBuilder.InitialCatalog = dataStoreId.Value;
             _sqlConnectionStringBuilder.DataSource = tenant.Server;
                 
             if(tenant.Port.HasValue)

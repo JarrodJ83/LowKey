@@ -11,7 +11,7 @@ namespace LowKey.Data.Diagnostics
             {
                 activity.SetTag(OpenTelemetryDatabaseTags.DatabaseServer, tenant.Server);
                 activity.SetTag(OpenTelemetryDatabaseTags.DatabasePort, tenant.Port);
-                activity.SetTag(OpenTelemetryDatabaseTags.DatabaseName, tenant.Name);
+                activity.SetTag(OpenTelemetryDatabaseTags.DatabaseName, tenant.Id.Value);
                 activity.SetTag(OpenTelemetryDatabaseTags.DatabaseOperation, operation);
                 activity.SetTag(LowKeyDataActivityTags.ClientType, clientType.FullName);
             }

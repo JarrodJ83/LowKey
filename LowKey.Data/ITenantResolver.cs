@@ -5,6 +5,6 @@ namespace LowKey.Data
 {
     public interface ITenantResolver
     {
-        Task<Tenant> Resolve(DataStoreId dataStoreId, CancellationToken cancel = default);
+        Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default);
     }
 }
