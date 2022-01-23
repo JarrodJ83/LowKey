@@ -7,28 +7,18 @@ namespace LowKey.Data
     public class QuerySession<TClient> : IQuerySession<TClient>
     {
         private readonly ITenantedQuerySession<TClient> _tenantedQuerySession;
-        private readonly DataStoreTanantResolverRegistry _dataStoreTanantResolverRegistry;
+        private readonly IDataStoreTenantResolver _dataStoreTenantResolver;
 
-        public QuerySession(ITenantedQuerySession<TClient> tenantedQuerySession, DataStoreTanantResolverRegistry dataStoreTanantResolverRegistry)
+        public QuerySession(ITenantedQuerySession<TClient> tenantedQuerySession, IDataStoreTenantResolver dataStoreTenantResolver)
         {
             _tenantedQuerySession = tenantedQuerySession;
-            _dataStoreTanantResolverRegistry = dataStoreTanantResolverRegistry;
+            _dataStoreTenantResolver = dataStoreTenantResolver;
         }
 
         public async Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task<TResult>> query, CancellationToken cancellation = default)
         {
-            Tenant tenant = await ResolveTenant(dataStoreId, cancellation);
+            Tenant tenant = await _dataStoreTenantResolver.Resolve(dataStoreId, cancellation);
             return await _tenantedQuerySession.Execute(dataStoreId, tenant, query, cancellation);
         }       
-
-        private async Task<Tenant> ResolveTenant(DataStoreId dataStoreId, CancellationToken cancellation)
-        {            
-            ITenantIdResolver tenantIdResolver = await _dataStoreTanantResolverRegistry.GetTenantIdResolverFor(dataStoreId, cancellation);
-            TenantId tenantId = await tenantIdResolver.Resolve();
-
-            ITenantResolver tenantResolver = await _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId, cancellation);
-            Tenant tenant = await tenantResolver.Resolve(dataStoreId, tenantId, cancellation);
-            return tenant;
-        }
     }
 }

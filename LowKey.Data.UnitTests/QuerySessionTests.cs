@@ -12,12 +12,14 @@ namespace LowKey.Data.UnitTests
         QuerySession<TestClient> _session;
         Mock<ITenantedQuerySession<TestClient>> _tenantedQuerySession;
         DataStoreTanantResolverRegistry _dataStoreTenantResolverRegistry;
+        DataStoreTenantResolver _dataStoreTenantResolver;
 
         public QuerySessionTests()
         {
             _dataStoreTenantResolverRegistry = new();
             _tenantedQuerySession = new();
-            _session = new QuerySession<TestClient>(_tenantedQuerySession.Object, _dataStoreTenantResolverRegistry);
+            _dataStoreTenantResolver = new DataStoreTenantResolver(_dataStoreTenantResolverRegistry);
+            _session = new QuerySession<TestClient>(_tenantedQuerySession.Object, _dataStoreTenantResolver);
         }
 
         [Theory, AutoData]

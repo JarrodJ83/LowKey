@@ -17,6 +17,8 @@ namespace Microsoft.Extensions.Hosting
             services.AddScoped(typeof(IQuerySession<>), typeof(QuerySession<>));
             services.AddScoped(typeof(ICommandSession<>), typeof(CommandSession<>));
 
+            services.AddSingleton<IDataStoreTenantResolver, DataStoreTenantResolver>();
+
             if (lowKeyDataOptions?.EnableDiagnosticActivities == true)
             {
                 services.Decorate(typeof(ITenantedQuerySession<>), typeof(ActivityTenantedQuerySession<>));

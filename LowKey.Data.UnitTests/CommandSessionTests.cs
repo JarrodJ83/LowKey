@@ -10,16 +10,16 @@ namespace LowKey.Data.UnitTests
     public class CommandSessionTests
     {
         CommandSession<TestClient> _session;
-        Mock<ITenantIdResolver> _tenantIdResolver;
         Mock<ITenantedCommandSession<TestClient>> _tenantedCommandSession;
         DataStoreTanantResolverRegistry _dataStoreTenantResolverRegistry;
+        DataStoreTenantResolver _dataStoreTenantResolver;
 
         public CommandSessionTests()
         {
-            _tenantIdResolver = new();
             _dataStoreTenantResolverRegistry = new();
             _tenantedCommandSession = new();
-            _session = new CommandSession<TestClient>(_tenantedCommandSession.Object, _tenantIdResolver.Object, _dataStoreTenantResolverRegistry);
+            _dataStoreTenantResolver = new(_dataStoreTenantResolverRegistry);
+            _session = new CommandSession<TestClient>(_tenantedCommandSession.Object, _dataStoreTenantResolver);
         }
 
         [Theory, AutoData]
