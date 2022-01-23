@@ -19,7 +19,7 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
 
         public async Task OnGet()
         {
-            var result = await _connSession.Execute(new DataStoreId("sql"), conn => conn.QueryAsync("select 1"));
+            var result = await _connSession.Execute(new DataStoreId("master"), conn => conn.QueryAsync("select 1"));
         }
     }
 }
