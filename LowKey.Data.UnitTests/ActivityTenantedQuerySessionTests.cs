@@ -1,4 +1,5 @@
 using LowKey.Data.Diagnostics;
+using LowKey.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

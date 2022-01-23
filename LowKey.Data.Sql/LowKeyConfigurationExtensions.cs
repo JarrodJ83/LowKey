@@ -1,4 +1,5 @@
 ﻿using LowKey.Data;
+using LowKey.Data.Model;
 using LowKey.Data.Sql;
 using LowKey.Extensions.Hosting;
 using System.Data.Common;

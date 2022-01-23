@@ -1,3 +1,4 @@
+using LowKey.Data.Model;
 using System;
 using System.Threading.Tasks;
 using Xunit;

@@ -1,4 +1,5 @@
 using AutoFixture.Xunit2;
+using LowKey.Data.Model;
 using Moq;
 using System;
 using System.Threading;

@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using LowKey.Data.Model;
 using LowKey.Data.Sql;
 using System.Data.Common;
 using System.Data.SqlClient;

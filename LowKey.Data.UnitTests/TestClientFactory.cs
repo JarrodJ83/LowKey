@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using LowKey.Data.Model;
+using System.Threading.Tasks;
 
 namespace LowKey.Data.UnitTests
 {
