@@ -26,8 +26,7 @@ namespace LowKey.Data.Example.Net5WebApp
 
             services.AddLowKeyData(config =>
             {
-                var dataStore = new DataStoreId("master");
-                config.AddStore(dataStore, server, database).WithSqlServer(connBuilder);
+                config.AddStore("master", server, database).WithSqlServer(connBuilder);
             });
             
             services.AddRazorPages();
