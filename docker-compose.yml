@@ -10,8 +10,13 @@ services:
       SQL_USERNAME: sa
       SQL_PASSWORD: "Your_password123"
       SQL_DATABASE: master
-      SQL_SERVER: sql
-  sql:
+      SQL_SERVER: sql-tenant1
+  sql-tenant1:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+  sql-tenant2:
     image: "mcr.microsoft.com/mssql/server"
     environment:
       SA_PASSWORD: "Your_password123"
