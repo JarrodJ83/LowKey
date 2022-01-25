@@ -5,6 +5,6 @@ namespace LowKey.Data
 {
     public interface IClientFactory<TClient>
     {
-        Task<TClient> CreateForStore(DataStoreId dataStore, Tenant tenant);
+        Task<TClient> CreateForStore(DataStore dataStore, Tenant tenant);
     }
 }

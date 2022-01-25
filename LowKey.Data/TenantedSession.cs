@@ -7,11 +7,13 @@ namespace LowKey.Data
 {
     public class TenantedSession<TClient> : ITenantedCommandSession<TClient>, ITenantedQuerySession<TClient>
     {
-        DataStoreClientFactoryRegistry _dataStoreClientRegistry;
+        private readonly DataStoreClientFactoryRegistry _dataStoreClientRegistry;
+        private readonly DataStoreRegistry _dataStoreRegistry;
 
-        public TenantedSession(DataStoreClientFactoryRegistry dataStoreClientRegistry)
+        public TenantedSession(DataStoreClientFactoryRegistry dataStoreClientRegistry, DataStoreRegistry dataStoreRegistry)
         {
             _dataStoreClientRegistry = dataStoreClientRegistry;
+            _dataStoreRegistry = dataStoreRegistry;
         }
 
         public async Task Execute(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task> command, CancellationToken cancellation = default)
@@ -28,8 +30,9 @@ namespace LowKey.Data
 
         async Task<TClient> GetClientFor(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
         {
-            var clientFactory = await _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId, cancellation);
-            return await clientFactory.CreateForStore(dataStoreId, tenant);
+            IClientFactory<TClient> clientFactory = await _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId, cancellation);
+            DataStore dataStore = _dataStoreRegistry.GetDataStore(dataStoreId);
+            return await clientFactory.CreateForStore(dataStore, tenant);
         }
     }
 }

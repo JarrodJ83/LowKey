@@ -2,5 +2,5 @@
 
 namespace LowKey.Data.UnitTests
 {
-    record TestClient(DataStoreId DataStoreId, Tenant Tenant);
+    record TestClient(DataStore DataStore, Tenant Tenant);
 }

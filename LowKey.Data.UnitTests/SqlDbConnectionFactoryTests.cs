@@ -17,12 +17,12 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task ConnectionIsForCorrectDatabase(DataStoreId dataStoreId, Tenant tenant)
+        public async Task ConnectionIsForCorrectDatabase(DataStore dataStore, Tenant tenant)
         {
-            DbConnection conn = await _dbConnFactory.CreateForStore(dataStoreId, tenant);
+            DbConnection conn = await _dbConnFactory.CreateForStore(dataStore, tenant);
 
             Assert.NotNull(conn);
-            Assert.Equal(dataStoreId.Value, conn.Database);
+            Assert.Equal(dataStore.Name, conn.Database);
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(conn.ConnectionString);
 

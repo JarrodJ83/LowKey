@@ -79,7 +79,7 @@ namespace LowKey.Data.UnitTests
                 var result = await querySession.Execute(dataStoreId, client =>
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 {
-                    Assert.Equal(dataStoreId, client.DataStoreId);
+                    Assert.Equal(dataStoreId, client.DataStore.Id);
                     Assert.Equal(tenant, client.Tenant);
                     return Task.FromResult(Guid.NewGuid());
                 });

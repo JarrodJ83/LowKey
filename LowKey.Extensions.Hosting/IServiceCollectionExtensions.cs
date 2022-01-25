@@ -38,6 +38,7 @@ namespace Microsoft.Extensions.Hosting
             services.AddSingleton(config);
             services.AddSingleton(config.DataStoreTanantResolverRegistry);
             services.AddSingleton(config.DataStoreClientFactoryRegistry);
+            services.AddSingleton(config.DataStoreRegistry);
 
             return services;
         }

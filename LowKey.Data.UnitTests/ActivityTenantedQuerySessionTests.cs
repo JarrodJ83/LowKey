@@ -11,7 +11,7 @@ namespace LowKey.Data.UnitTests
 {
     public class ActivityTenantedQuerySessionTests : IDisposable
     {
-        DataStoreId TestDataStore = new("Test");
+        DataStore TestDataStore = new("Test");
         Tenant TestTenant = new("TestDb", "test.server", 0);
         ITenantedQuerySession<TestClient> _session;
         IClientFactory<TestClient> _clientFactory;
@@ -22,9 +22,10 @@ namespace LowKey.Data.UnitTests
         {
             _clientFactory = new TestClientFactory();
             var clientFactoryRegistry = new DataStoreClientFactoryRegistry();
-            clientFactoryRegistry.RegisterClientFor(TestDataStore, cancel => Task.FromResult(_clientFactory));            
+            clientFactoryRegistry.RegisterClientFor(TestDataStore.Id, cancel => Task.FromResult(_clientFactory));
+            var dataStoreRegistry = new DataStoreRegistry(new HashSet<DataStore> { TestDataStore });            
 
-            _session = new ActivityTenantedQuerySession<TestClient>(new TenantedSession<TestClient>(clientFactoryRegistry));
+            _session = new ActivityTenantedQuerySession<TestClient>(new TenantedSession<TestClient>(clientFactoryRegistry, dataStoreRegistry));
             _activityListener = new ActivityListener
             {
                 ShouldListenTo = source => source.Name.Equals(ActivitySourceNames.QuerySessionActivityName),
@@ -37,7 +38,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task QueryActivityIsTraced()
         {
-            await _session.Execute(TestDataStore, TestTenant, client => Task.FromResult(string.Empty));
+            await _session.Execute(TestDataStore.Id, TestTenant, client => Task.FromResult(string.Empty));
 
             Assert.NotNull(_activity);
             Assert.Equal(ActivitySourceNames.QuerySessionActivityName, _activity?.Source.Name);
@@ -47,7 +48,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task QueryActivityHasCorrectTags()
         {
-            await _session.Execute(TestDataStore, TestTenant, client => Task.FromResult(string.Empty));
+            await _session.Execute(TestDataStore.Id, TestTenant, client => Task.FromResult(string.Empty));
 
             TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Id.Value);
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestTenant.Server);
@@ -64,7 +65,7 @@ namespace LowKey.Data.UnitTests
         {
             _activityListener.Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.PropagationData;
 
-            await _session.Execute(TestDataStore, TestTenant, client => Task.FromResult(string.Empty));
+            await _session.Execute(TestDataStore.Id, TestTenant, client => Task.FromResult(string.Empty));
 
             Assert.Empty(_activity?.TagObjects);
         }
@@ -75,7 +76,7 @@ namespace LowKey.Data.UnitTests
             Activity? activityWithinQuery = Activity.Current;
             Assert.Null(activityWithinQuery);
 
-            await _session.Execute(TestDataStore, TestTenant, async client => {
+            await _session.Execute(TestDataStore.Id, TestTenant, async client => {
                 await Task.Yield();
 
                 activityWithinQuery = Activity.Current;

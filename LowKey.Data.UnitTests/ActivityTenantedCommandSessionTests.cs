@@ -11,16 +11,18 @@ namespace LowKey.Data.UnitTests
 {
     public class ActivityTenantedCommandSessionTests : IDisposable
     {
-        DataStoreId TestDataStore = new("TestDataStore");
+        DataStore TestDataStore = new("TestDataStore");
         Tenant TestTenant = new("TestDb", "test.server", 0);
         ActivityTenantedCommandSession<TestClient> _session;
         Activity? _commandActivity;
         ActivityListener _activityListener;
         public ActivityTenantedCommandSessionTests()
         {
+            var dataStoreRegistry = new DataStoreRegistry();
+            dataStoreRegistry.Add(TestDataStore);
             var clientFactoryRegistry = new DataStoreClientFactoryRegistry();
-            clientFactoryRegistry.RegisterClientFor(TestDataStore, cancel => Task.FromResult((IClientFactory<TestClient>)new TestClientFactory()));
-            _session = new ActivityTenantedCommandSession<TestClient>(new TenantedSession<TestClient>(clientFactoryRegistry));
+            clientFactoryRegistry.RegisterClientFor(TestDataStore.Id, cancel => Task.FromResult((IClientFactory<TestClient>)new TestClientFactory()));
+            _session = new ActivityTenantedCommandSession<TestClient>(new TenantedSession<TestClient>(clientFactoryRegistry, dataStoreRegistry));
             _activityListener = new ActivityListener
             {
                 ShouldListenTo = source => source.Name == ActivitySourceNames.CommandSessionActivityName,
@@ -33,7 +35,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task CommandActivityIsTraced()
         {
-            await _session.Execute(TestDataStore, TestTenant, client => Task.CompletedTask);
+            await _session.Execute(TestDataStore.Id, TestTenant, client => Task.CompletedTask);
 
             Assert.NotNull(_commandActivity);
             Assert.Equal(ActivitySourceNames.CommandSessionActivityName, _commandActivity?.Source.Name);
@@ -43,7 +45,7 @@ namespace LowKey.Data.UnitTests
         [Fact]
         public async Task CommandActivityHasCorrectTags()
         {
-            await _session.Execute(TestDataStore, TestTenant, client => Task.CompletedTask);
+            await _session.Execute(TestDataStore.Id, TestTenant, client => Task.CompletedTask);
 
             TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Id.Value);
             TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestTenant.Server);
@@ -57,7 +59,7 @@ namespace LowKey.Data.UnitTests
         {
             _activityListener.Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.PropagationData;
 
-            await _session.Execute(TestDataStore, TestTenant, client => Task.CompletedTask);
+            await _session.Execute(TestDataStore.Id, TestTenant, client => Task.CompletedTask);
 
             Assert.Empty(_commandActivity?.TagObjects);
         }
@@ -81,7 +83,7 @@ namespace LowKey.Data.UnitTests
             Activity? activityWithinCommand = Activity.Current;
             Assert.Null(activityWithinCommand);
 
-            await _session.Execute(TestDataStore, TestTenant, async client => {
+            await _session.Execute(TestDataStore.Id, TestTenant, async client => {
                 await Task.Yield();
 
                 activityWithinCommand = Activity.Current;
