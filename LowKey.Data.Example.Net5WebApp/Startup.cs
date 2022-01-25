@@ -1,9 +1,11 @@
 using LowKey.Data.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 
 namespace LowKey.Data.Example.Net5WebApp
 {
@@ -24,9 +26,20 @@ namespace LowKey.Data.Example.Net5WebApp
             var database = Configuration.GetValue<string>("SQL_DATABASE");
             var server = Configuration.GetValue<string>("SQL_SERVER");
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddLowKeyData(config =>
             {
-                config.AddStore("master", server, database).WithSqlServer(connBuilder);
+                // SINGLE TENANT
+                //config.AddStore("master", server, database).WithSqlServer(connBuilder);
+
+
+                // MULTI-TENANT
+                var tenantResolver = new QueryStringTenantResolver(new Tenant(server, server));
+                config.AddStore("master", 
+                    tenantResolverFactory: cancel => Task.FromResult((ITenantResolver)tenantResolver),
+                    tenantIdResolverFactory: cancel => Task.FromResult((ITenantIdResolver)tenantResolver))
+                    .WithSqlServer(connBuilder);
             });
             
             services.AddRazorPages();
