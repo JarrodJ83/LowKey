@@ -1,4 +1,4 @@
-﻿using LowKey.Data.Transactions;
+﻿using LowKey.Data.MultiTenancy.Transactions;
 
 namespace LowKey.Extensions.Hosting
 {

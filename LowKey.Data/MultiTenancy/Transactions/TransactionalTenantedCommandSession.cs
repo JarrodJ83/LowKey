@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace LowKey.Data.Transactions
+namespace LowKey.Data.MultiTenancy.Transactions
 {
     public class TransactionSettings
     {

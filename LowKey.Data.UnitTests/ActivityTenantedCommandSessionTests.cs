@@ -1,5 +1,5 @@
-using LowKey.Data.Diagnostics;
 using LowKey.Data.Model;
+using LowKey.Data.MultiTenancy.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

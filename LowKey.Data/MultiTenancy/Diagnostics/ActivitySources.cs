@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace LowKey.Data.Diagnostics
+namespace LowKey.Data.MultiTenancy.Diagnostics
 {
     public static class ActivitySourceNames
     {

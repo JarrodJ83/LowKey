@@ -1,4 +1,4 @@
-﻿namespace LowKey.Data.Diagnostics
+﻿namespace LowKey.Data.MultiTenancy.Diagnostics
 {
     public static class LowKeyDataActivityTags
     {

@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LowKey.Data
+namespace LowKey.Data.MultiTenancy
 {
     public class AmbientContextTenantIdResolver : ITenantIdResolver
     {
@@ -22,7 +22,7 @@ namespace LowKey.Data
         private readonly AsyncLocal<TenantId?> _tenantId;
         public TenantId? TenantId => _tenantId.Value;
 
-        public static TenantContext? Current { get; private set; }   
+        public static TenantContext? Current { get; private set; }
 
         private TenantContext(TenantId tenantId)
         {
@@ -34,8 +34,8 @@ namespace LowKey.Data
         public static TenantContext CreateFor(TenantId tenantId) =>
             new TenantContext(tenantId);
 
-        public void Dispose() 
-        {   
+        public void Dispose()
+        {
             _tenantId.Value = null;
             Current = null;
         }

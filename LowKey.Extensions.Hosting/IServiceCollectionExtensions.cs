@@ -1,6 +1,7 @@
 ﻿using LowKey.Data;
-using LowKey.Data.Diagnostics;
-using LowKey.Data.Transactions;
+using LowKey.Data.MultiTenancy;
+using LowKey.Data.MultiTenancy.Diagnostics;
+using LowKey.Data.MultiTenancy.Transactions;
 using LowKey.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,7 +10,7 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Action<LowKeyConfiguration> configuration, LowKeyDataOptions lowKeyDataOptions = default)
+        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Action<LowKeyConfiguration> configuration, LowKeyDataOptions? lowKeyDataOptions = default)
         {
             services.AddScoped(typeof(ITenantedQuerySession<>), typeof(TenantedSession<>));
             services.AddScoped(typeof(ITenantedCommandSession<>), typeof(TenantedSession<>));

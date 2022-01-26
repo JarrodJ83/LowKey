@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LowKey.Data.Diagnostics
+namespace LowKey.Data.MultiTenancy.Diagnostics
 {
     public class ActivityTenantedQuerySession<TClient> : ITenantedQuerySession<TClient>
     {
         private readonly ITenantedQuerySession<TClient> _querySession;
         private const string Operation = "Query";
-        
+
         public ActivityTenantedQuerySession(ITenantedQuerySession<TClient> querySession)
         {
             _querySession = querySession;

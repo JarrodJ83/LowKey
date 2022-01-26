@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace LowKey.Data.Diagnostics
+namespace LowKey.Data.MultiTenancy.Diagnostics
 {
     static class ActivitySessionExtensions
     {

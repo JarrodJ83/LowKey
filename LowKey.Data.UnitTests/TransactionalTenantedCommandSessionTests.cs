@@ -1,5 +1,5 @@
 ﻿using LowKey.Data.Model;
-using LowKey.Data.Transactions;
+using LowKey.Data.MultiTenancy.Transactions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

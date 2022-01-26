@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LowKey.Data.Diagnostics
+namespace LowKey.Data.MultiTenancy.Diagnostics
 {
     public class ActivityTenantedCommandSession<TClient> : ITenantedCommandSession<TClient>
     {
