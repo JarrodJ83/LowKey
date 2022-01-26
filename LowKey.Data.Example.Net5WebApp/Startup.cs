@@ -31,12 +31,12 @@ namespace LowKey.Data.Example.Net5WebApp
             services.AddLowKeyData(config =>
             {
                 // SINGLE TENANT
-                //config.AddStore("master", server, database).WithSqlServer(connBuilder);
+                config.AddStore(new DataStore("sql", "master"), server, database).WithSqlServer(connBuilder);
 
 
                 // MULTI-TENANT
                 var tenantResolver = new QueryStringTenantResolver(new Tenant(server, server));
-                config.AddStore("master", 
+                config.AddStore(new DataStore("sql-multi-tenant", "master"), 
                     tenantResolverFactory: cancel => Task.FromResult((ITenantResolver)tenantResolver),
                     tenantIdResolverFactory: cancel => Task.FromResult((ITenantIdResolver)tenantResolver))
                     .WithSqlServer(connBuilder);
