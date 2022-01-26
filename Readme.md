@@ -38,7 +38,7 @@ DataStores can be registered as single or multi-tenant. When executing LowKey wi
 
 Below is an example of configuring and using a single tenanted connection to a SQL Database.
 
-**Configuration**
+#### Configuration
 This configuration will connect to the `master` database on `localhost` using the supplied `SqlConnectionStringBuilder` by replacing the builder's `InitialCatalog` and `Server` at runtime.
 
 ```
@@ -53,7 +53,7 @@ services.AddLowKeyData(config =>
 });
 ```
 
-**Usage**
+#### Usage
 The below example uses Dapper to run a SQL query and command.
 ```
 public class IndexModel : PageModel
@@ -82,7 +82,7 @@ public class IndexModel : PageModel
 
 Below is an example of configuring and using a multi-tenant configuratoin to a SQL Server  Database. In order to leverage multi-tenancy LowKey needs to know how to resolve two things: The `TenantId` and the actual `Tenant`. The `TenantId` will likely come from something like Jwt for the authenticated user. This is the ID used to lookup the Tenant from your system. You must implement and provide two interfaces to tell LowKey how to obtain this data: `ITenantIdResolver` and `ITenantResolver`.
 
-**Configuration**
+#### Configuration
 This configuration will connect to the `master` database on `localhost` using the supplied `SqlConnectionStringBuilder` by replacing the builder's `InitialCatalog` and `Server` at runtime from the Tenant looked up by the using the supplied `ITenantIdResolver` and `ITenantResolver`.
 
 ```
@@ -100,7 +100,7 @@ services.AddLowKeyData(config =>
 });
 ```
 
-**Usage**
+#### Usage
 The below example uses Dapper to run a SQL query and command. You'll notice we're using the same interfaces for Multi-Tenancy support as single. The only difference is we're using a different `DataStoreId` to tell it to use the store that is configured for Multi-Tenancy.
 
 ```
