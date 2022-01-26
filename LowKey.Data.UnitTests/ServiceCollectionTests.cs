@@ -21,18 +21,18 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task SingleDataStoreWithSingleTenant(DataStoreId dataStoreId, string server, TenantId tenantId, int port)
+        public async Task SingleDataStoreWithSingleTenant(DataStoreId dataStoreId, string server, int port)
         {
             _services.AddLowKeyData(lowKey =>
             {
-                lowKey.AddStore(dataStoreId.Value, server, tenantId.Value, port);
+                lowKey.AddStore(dataStoreId.Value, server, port);
             });
 
             var tenantResolver = await GetTenantResolverFor(dataStoreId);
 
             Assert.IsType<SingleTenantResolver>(tenantResolver);
 
-            var tenant = await tenantResolver.Resolve(dataStoreId, tenantId);
+            var tenant = await tenantResolver.Resolve(dataStoreId, new TenantId(server));
             Assert.Equal(server, tenant.Server);
             Assert.Equal(port, tenant.Port);
         }

@@ -20,9 +20,11 @@ namespace LowKey.Data.Example.Net5WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-            connBuilder.UserID = Configuration.GetValue<string>("SQL_USERNAME");
-            connBuilder.Password = Configuration.GetValue<string>("SQL_PASSWORD");
+            var connBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder
+            {
+                UserID = Configuration.GetValue<string>("SQL_USERNAME"),
+                Password = Configuration.GetValue<string>("SQL_PASSWORD")
+            };
             var database = Configuration.GetValue<string>("SQL_DATABASE");
             var server = Configuration.GetValue<string>("SQL_SERVER");
 
@@ -31,7 +33,7 @@ namespace LowKey.Data.Example.Net5WebApp
             services.AddLowKeyData(config =>
             {
                 // SINGLE TENANT
-                config.AddStore(new DataStore("sql", "master"), server, database).WithSqlServer(connBuilder);
+                config.AddStore(new DataStore("sql", database), server).WithSqlServer(connBuilder);
 
 
                 // MULTI-TENANT

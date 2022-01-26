@@ -47,12 +47,11 @@ namespace LowKey.Extensions.Hosting
             return new LowKeyDataStoreConfig(this, dataStore);
         }
 
-        public LowKeyDataStoreConfig AddStore(string dataStore, string server, string tenant, int? port = null) =>
-            AddStore(new DataStore(dataStore), new Tenant(tenant, server, port));
+        public LowKeyDataStoreConfig AddStore(string dataStore, string server, int? port = null) =>
+            AddStore(new DataStore(dataStore), new Tenant(server, server, port));
 
-        public LowKeyDataStoreConfig AddStore(DataStore dataStore, string server, string tenant, int? port = null) =>
-        AddStore(dataStore, new Tenant(tenant, server, port));
-
+        public LowKeyDataStoreConfig AddStore(DataStore dataStore, string server, int? port = null) =>
+        AddStore(dataStore, new Tenant(server, server, port));
 
         public LowKeyDataStoreConfig AddStore(DataStore dataStore, Tenant tenant)
         {
