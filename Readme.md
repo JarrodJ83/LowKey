@@ -18,7 +18,7 @@ LowKey is made of a few basic concepts:
 
 ### Data Stores
 
-In LowKey a DataStore represents a data store you'd like to connect to. It's represented by an Id which is used to reference it when establishing a connection and a Name that's to represent the actual store. For example, the Master database of a SQL server might be represented as `new DataStore("sql-master", "master")`
+In LowKey a DataStore represents an external storage system you'd like to connect to. It's represented by an Id which is used to reference it when establishing a connection and a Name that's to represent the actual store. For example, the Master database of a SQL server might be represented as `new DataStore("sql-master", "master")`
 
 ### Tenants
 
