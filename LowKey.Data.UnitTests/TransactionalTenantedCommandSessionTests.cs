@@ -93,5 +93,11 @@ namespace LowKey.Data.UnitTests
             Executed = true;
             return command(new TestClient(new DataStore(dataStoreId.Value), tenant));
         }
+
+        public Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Tenant tenant, Func<TestClient, Task<TResult>> command, CancellationToken cancellation = default)
+        {
+            Executed = true;
+            return command(new TestClient(new DataStore(dataStoreId.Value), tenant));
+        }
     }
 }

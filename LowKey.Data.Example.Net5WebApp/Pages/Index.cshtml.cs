@@ -26,7 +26,7 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
         public async Task OnGet()
         {
             var dataStoreId = new DataStoreId(_httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant") ? "sql-multi-tenant" : "sql");
-            await _cmdSession.Execute<DbConnection>(dataStoreId, conn => conn.ExecuteAsync("select 1"));
+            await _cmdSession.Execute(dataStoreId, conn => conn.ExecuteAsync("select 1"));
             var result = await _qrySession.Execute(dataStoreId, conn => conn.QueryAsync("select 1"));
         }
     }

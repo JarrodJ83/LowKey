@@ -46,7 +46,7 @@ namespace LowKey.Data.UnitTests
                                                                                             It.IsAny<Func<TestClient, Task>>(),
                                                                                             It.IsAny<CancellationToken>()));
 
-        private Task WhenCommandIsExecuted(DataStoreId dataStoreId) => _session.Execute<TestClient>(dataStoreId, testClient => Task.CompletedTask, CancellationToken.None);
+        private Task WhenCommandIsExecuted(DataStoreId dataStoreId) => _session.Execute(dataStoreId, testClient => Task.CompletedTask, CancellationToken.None);
 
         private void GivenTenantRegisteredForDataStore(DataStoreId dataStoreId, Tenant tenant) =>
             _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId,

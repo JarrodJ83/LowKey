@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -83,6 +84,34 @@ namespace LowKey.Data.UnitTests
                     Assert.Equal(dataStoreId, client.DataStore.Id);
                     Assert.Equal(tenant, client.Tenant);
                     return Task.FromResult(Guid.NewGuid());
+                });
+            }
+        }
+
+        [Theory, AutoData]
+        public async Task SingleDataStoreWithMulitpleTenantsCommandSession(DataStoreId dataStoreId, Tenant[] tenants)
+        {
+            var dataStoreTenants = new Dictionary<DataStoreId, Tenant[]> { { dataStoreId, tenants } };
+            _services.AddLowKeyData(lowKey =>
+            {
+                lowKey.AddStore(dataStoreId.Value,
+                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
+                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()))
+                    .WithTestClient();
+            });
+
+            var commandSession = _services.BuildServiceProvider().GetService<ICommandSession<TestClient>>();
+            Assert.NotNull(commandSession);
+            foreach (var tenant in tenants)
+            {
+                using var tenantContext = TenantContext.CreateFor(tenant.Id);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                await commandSession.Execute(dataStoreId, client =>
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                {
+                    Assert.Equal(dataStoreId, client.DataStore.Id);
+                    Assert.Equal(tenant, client.Tenant);
+                    return Task.CompletedTask;
                 });
             }
         }

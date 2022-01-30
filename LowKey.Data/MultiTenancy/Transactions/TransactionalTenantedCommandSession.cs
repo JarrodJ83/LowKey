@@ -35,5 +35,13 @@ namespace LowKey.Data.MultiTenancy.Transactions
             await _commandSession.Execute(dataStoreId, tenant, command, cancellation);
             trxScope.Complete();
         }
+
+        public async Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task<TResult>> command, CancellationToken cancellation = default)
+        {
+            using var trxScope = new TransactionScope(_settings.TransactionScopeOption, _settings.TransactionOptions, TransactionScopeAsyncFlowOption.Enabled);
+            TResult result = await _commandSession.Execute(dataStoreId, tenant, command, cancellation);
+            trxScope.Complete();
+            return result;
+        }
     }
 }

@@ -17,10 +17,16 @@ namespace LowKey.Data
             _dataStoreTenantResolver = dataStoreTenantResolver;
         }
 
-        public async Task Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task> command, CancellationToken cancellation = default)
+        public async Task Execute(DataStoreId dataStoreId, Func<TClient, Task> command, CancellationToken cancellation = default)
         {
             Tenant tenant = await _dataStoreTenantResolver.Resolve(dataStoreId, cancellation);
             await _tenantedCommandSession.Execute(dataStoreId, tenant, command, cancellation);
+        }
+
+        public async Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task<TResult>> command, CancellationToken cancellation = default)
+        {
+            Tenant tenant = await _dataStoreTenantResolver.Resolve(dataStoreId, cancellation);
+            return await _tenantedCommandSession.Execute(dataStoreId, tenant, command, cancellation);
         }
     }
 }

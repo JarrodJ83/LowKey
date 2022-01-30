@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
-    public interface ICommandSession<TClient>
+    public interface ICommandSession<out TClient>
     {
-        Task Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task> command, CancellationToken cancellation = default);
+        Task Execute(DataStoreId dataStoreId, Func<TClient, Task> command, CancellationToken cancellation = default);
+        Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Func<TClient, Task<TResult>> command, CancellationToken cancellation = default);
     }
 }

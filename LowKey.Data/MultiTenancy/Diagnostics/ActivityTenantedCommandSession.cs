@@ -24,5 +24,14 @@ namespace LowKey.Data.MultiTenancy.Diagnostics
 
             return _commandSession.Execute(dataStoreId, tenant, command, cancellation);
         }
+
+        public Task<TResult> Execute<TResult>(DataStoreId dataStoreId, Tenant tenant, Func<TClient, Task<TResult>> command, CancellationToken cancellation = default)
+        {
+            using Activity? activity = ActivitySources.CommandSessionActivity.StartActivity($"{nameof(Execute)} {typeof(TClient).FullName} {Operation}", ActivityKind.Client);
+
+            activity.SetLowKeyActivityTags(dataStoreId, tenant, typeof(TClient), Operation);
+
+            return _commandSession.Execute(dataStoreId, tenant, command, cancellation);
+        }
     }
 }
