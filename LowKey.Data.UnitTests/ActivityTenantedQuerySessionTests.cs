@@ -50,13 +50,13 @@ namespace LowKey.Data.UnitTests
         {
             await _session.Execute(TestDataStore.Id, TestTenant, client => Task.FromResult(string.Empty));
 
-            TestTag(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Id.Value);
-            TestTag(OpenTelemetryDatabaseTags.DatabaseServer, TestTenant.Server);
-            TestTag(OpenTelemetryDatabaseTags.DatabasePort, TestTenant.Port?.ToString() ?? string.Empty);
-            TestTag(OpenTelemetryDatabaseTags.DatabaseOperation, "Query");
+            VerifyActivityTagHasExpectedValue(OpenTelemetryDatabaseTags.DatabaseName, TestTenant.Id.Value);
+            VerifyActivityTagHasExpectedValue(OpenTelemetryDatabaseTags.DatabaseServer, TestTenant.Server);
+            VerifyActivityTagHasExpectedValue(OpenTelemetryDatabaseTags.DatabasePort, TestTenant.Port?.ToString() ?? string.Empty);
+            VerifyActivityTagHasExpectedValue(OpenTelemetryDatabaseTags.DatabaseOperation, "Query");
 #pragma warning disable CS8604 // Possible null reference argument.
-            TestTag(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName);
-            TestTag(LowKeyDataActivityTags.QueryResultType, typeof(string)?.FullName);
+            VerifyActivityTagHasExpectedValue(LowKeyDataActivityTags.ClientType, typeof(TestClient)?.FullName);
+            VerifyActivityTagHasExpectedValue(LowKeyDataActivityTags.QueryResultType, typeof(string)?.FullName);
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
@@ -87,7 +87,7 @@ namespace LowKey.Data.UnitTests
             Assert.NotNull(activityWithinQuery);
         }
 
-        void TestTag(string key, string expectedValue)
+        void VerifyActivityTagHasExpectedValue(string key, string expectedValue)
         {
             if (_activity == null) throw new Exception("Activity null");
 
