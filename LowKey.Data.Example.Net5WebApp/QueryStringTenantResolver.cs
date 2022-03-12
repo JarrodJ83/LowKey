@@ -16,11 +16,11 @@ namespace LowKey.Data.Example.Net5WebApp
             _defaultTenant = defaultTenant;
         }
 
-        public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default) => Task.FromResult(GetTenant());
+        public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default) => Task.FromResult(GetTenantFromRequestQueryString());
 
-        public Task<TenantId> Resolve() => Task.FromResult(GetTenant().Id);
+        public Task<TenantId> Resolve() => Task.FromResult(GetTenantFromRequestQueryString().Id);
 
-        Tenant GetTenant()
+        Tenant GetTenantFromRequestQueryString()
         {
             if(_httpContextAccessor.HttpContext.Request.Query.TryGetValue("tenant", out var tenantId))
             {
