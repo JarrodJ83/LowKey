@@ -11,14 +11,12 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IQuerySession<DbConnection> _qrySession;
-        private readonly ICommandSession<DbConnection> _cmdSession;
+        private readonly IClientFactory _clientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IndexModel(ILogger<IndexModel> logger, IQuerySession<DbConnection> qrySession, ICommandSession<DbConnection> cmdSession, IHttpContextAccessor httpContextAccessor)
+        public IndexModel(ILogger<IndexModel> logger, IClientFactory clientFactory, IHttpContextAccessor httpContextAccessor)
         {
-            _qrySession = qrySession;
-            _cmdSession = cmdSession;
+            _clientFactory = clientFactory;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -26,8 +24,10 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
         public async Task OnGet()
         {
             var dataStoreId = new DataStoreId(_httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant") ? "sql-multi-tenant" : "sql");
-            await _cmdSession.Execute(dataStoreId, conn => conn.ExecuteAsync("select 1"));
-            var result = await _qrySession.Execute(dataStoreId, conn => conn.QueryAsync("select 1"));
+
+            var client = await _clientFactory.Resolve<DbConnection>(dataStoreId);
+
+            var result = await client.QueryFirstAsync<int>("select 1");
         }
     }
 }

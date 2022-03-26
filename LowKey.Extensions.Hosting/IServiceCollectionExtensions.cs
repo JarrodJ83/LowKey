@@ -1,7 +1,5 @@
 ﻿using LowKey.Data;
 using LowKey.Data.MultiTenancy;
-using LowKey.Data.MultiTenancy.Diagnostics;
-using LowKey.Data.MultiTenancy.Transactions;
 using LowKey.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,25 +10,8 @@ namespace Microsoft.Extensions.Hosting
     {
         public static IServiceCollection AddLowKeyData(this IServiceCollection services, Action<LowKeyConfiguration> configuration, LowKeyDataOptions? lowKeyDataOptions = default)
         {
-            services.AddScoped(typeof(ITenantedQuerySession<>), typeof(TenantedSession<>));
-            services.AddScoped(typeof(ITenantedCommandSession<>), typeof(TenantedSession<>));
-
-            services.AddScoped(typeof(IQuerySession<>), typeof(QuerySession<>));
-            services.AddScoped(typeof(ICommandSession<>), typeof(CommandSession<>));
-
             services.AddSingleton<IDataStoreTenantResolver, DataStoreTenantResolver>();
-
-            if (lowKeyDataOptions?.EnableDiagnosticActivities == true)
-            {
-                services.Decorate(typeof(ITenantedQuerySession<>), typeof(ActivityTenantedQuerySession<>));
-                services.Decorate(typeof(ITenantedCommandSession<>), typeof(ActivityTenantedCommandSession<>));
-            }
-
-            if (lowKeyDataOptions?.CommandOptions?.TransactionSettings is not null)
-            {
-                services.AddSingleton(lowKeyDataOptions.CommandOptions.TransactionSettings);
-                services.Decorate(typeof(ITenantedCommandSession<>), typeof(TransactionalTenantedCommandSession<>));
-            }
+            services.AddSingleton<IClientFactory, LowKeyClientFactory>();
 
             var config = new LowKeyConfiguration();
 
