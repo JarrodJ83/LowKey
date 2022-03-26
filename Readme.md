@@ -24,13 +24,11 @@ In LowKey a DataStore represents an external storage system you'd like to connec
 
 In LowKey a Tenant represents the location of a DataStore. It has an Id which is used to look it up along with a Server and a Port.
 
-### Commands vs Queries
-
-LowKey separates its interfaces into Commands and Queries to allow for adding appropriate cross cutting concerns. Both tenanted and non-tenanted interfaces will each have separate interfaces for commands and queries:
-
-### Putting it Together
+### Client Factory
 
 DataStores can be registered as single or multi-tenant. When executing LowKey will use the configuration to find the Tenant for the DataStore and then use them both to build a connected client of your choice.
+
+`IClientFactory` is what glues everything together. This interface will allow you to get a pre-cofnigured client for any of your registered Data Stores and will automatically resolve the corrent Tenant based on configuration.
 
 ## Examples
 
@@ -58,22 +56,18 @@ The below example uses Dapper to run a SQL query and command.
 ```
 public class IndexModel : PageModel
 {
-        private readonly IQuerySession<DbConnection> _qrySession;
-        private readonly ICommandSession<DbConnection> _cmdSession;
+        private readonly IClientFactory _clientFactory;
 
-        public IndexModel(ILogger<IndexModel> logger, IQuerySession<DbConnection> qrySession, ICommandSession<DbConnection> cmdSession)
+        public IndexModel(ILogger<IndexModel> logger, IClientFactory clientFactory)
         {
-                _qrySession = qrySession;
-                _cmdSession = cmdSession;
+            _clientFactory = clientFactory;
         }
 
         public async Task OnGet()
         {
-                var dataStoreId = new DataStoreId("sql");
-                await _cmdSession.Execute<DbConnection>(dataStoreId, conn =>
-                        conn.ExecuteAsync("select 1"));
-                var result = await _qrySession.Execute(dataStoreId, conn =>
-                        conn.QueryAsync("select 1"));
+            var dataStoreId = new DataStoreId("sql");
+            DbConnection client = await _clientFactory.Resolve<DbConnection>(dataStoreId);
+            int result = await client.QueryFirstAsync<int>("select 1");
         }
 }
 ```
@@ -106,22 +100,18 @@ The below example uses Dapper to run a SQL query and command. You'll notice we'r
 ```
 public class IndexModel : PageModel
 {
-        private readonly IQuerySession<DbConnection> _qrySession;
-        private readonly ICommandSession<DbConnection> _cmdSession;
+         private readonly IClientFactory _clientFactory;
 
-        public IndexModel(ILogger<IndexModel> logger, IQuerySession<DbConnection> qrySession, ICommandSession<DbConnection> cmdSession)
+        public IndexModel(ILogger<IndexModel> logger, IClientFactory clientFactory)
         {
-                _qrySession = qrySession;
-                _cmdSession = cmdSession;
+            _clientFactory = clientFactory;
         }
 
         public async Task OnGet()
         {
-                var dataStoreId = new DataStoreId("sql-multi-tenant");
-                await _cmdSession.Execute<DbConnection>(dataStoreId, conn =>
-                        conn.ExecuteAsync("select 1"));
-                var result = await _qrySession.Execute(dataStoreId, conn =>
-                        conn.QueryAsync("select 1"));
+            var dataStoreId = new DataStoreId("sql-multi-tenant");
+            DbConnection client = await _clientFactory.Resolve<DbConnection>(dataStoreId);
+            int result = await client.QueryFirstAsync<int>("select 1");
         }
 }
 ```
