@@ -23,11 +23,11 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
 
         public async Task OnGet()
         {
-            var dataStoreId = new DataStoreId(_httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant") ? "sql-multi-tenant" : "sql");
+            DataStoreId dataStoreId = new DataStoreId(_httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant") ? "sql-multi-tenant" : "sql");
 
-            var client = await _clientFactory.Resolve<DbConnection>(dataStoreId);
+            DbConnection client = await _clientFactory.Resolve<DbConnection>(dataStoreId);
 
-            var result = await client.QueryFirstAsync<int>("select 1");
+            int result = await client.QueryFirstAsync<int>("select 1");
         }
     }
 }
