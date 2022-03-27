@@ -76,7 +76,7 @@ namespace LowKey.Data.UnitTests
             foreach (var tenant in tenants)
             {
                 using var tenantContext = TenantContext.CreateFor(tenant.Id);
-                var client = await clientFactory.Resolve<TestClient>(dataStoreId);
+                var client = await clientFactory.Create<TestClient>(dataStoreId);
 
                 Assert.Equal(tenant, client.Tenant);
                 Assert.Equal(dataStoreId, client.DataStore.Id);

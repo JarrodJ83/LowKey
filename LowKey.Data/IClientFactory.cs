@@ -6,7 +6,7 @@ namespace LowKey.Data
 {
     public interface IClientFactory
     {
-        Task<TClient> Resolve<TClient>(DataStoreId dataStoreId, CancellationToken cancel = default);
+        Task<TClient> Create<TClient>(DataStoreId dataStoreId, CancellationToken cancel = default);
     }
 
     public interface IClientFactory<TClient>

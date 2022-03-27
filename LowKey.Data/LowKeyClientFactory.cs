@@ -17,7 +17,7 @@ namespace LowKey.Data
             _dataStoreRegistry = dataStoreRegistry;
         }
 
-        public async Task<TClient> Resolve<TClient>(DataStoreId dataStoreId, CancellationToken cancel = default)
+        public async Task<TClient> Create<TClient>(DataStoreId dataStoreId, CancellationToken cancel = default)
         {            
             Tenant tenant = await _dataStoreTenantResolver.Resolve(dataStoreId, cancel);
 

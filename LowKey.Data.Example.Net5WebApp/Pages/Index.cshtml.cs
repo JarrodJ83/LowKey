@@ -25,7 +25,7 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
         {
             DataStoreId dataStoreId = new DataStoreId(_httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant") ? "sql-multi-tenant" : "sql");
 
-            DbConnection client = await _clientFactory.Resolve<DbConnection>(dataStoreId);
+            DbConnection client = await _clientFactory.Create<DbConnection>(dataStoreId);
 
             int result = await client.QueryFirstAsync<int>("select 1");
         }
