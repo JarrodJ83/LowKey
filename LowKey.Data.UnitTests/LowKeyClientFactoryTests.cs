@@ -15,6 +15,7 @@ namespace LowKey.Data.UnitTests
         DataStoreTanantResolverRegistry _dataStoreTenantResolverRegistry;
         DataStoreClientFactoryRegistry _clientFactoryRegistry;
         DataStoreRegistry _dataStoreRegistry;
+
         public LowKeyClientFactoryTests()
         {
             _dataStoreTenantResolverRegistry = new DataStoreTanantResolverRegistry();
@@ -26,41 +27,64 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task ClientCreatedForCorrectClientAndTenant(DataStore dataStore, Tenant tenant)
+        public async Task ClientCreatedForCorrectClientAndSingleTenant(DataStore dataStore, Tenant tenant)
         {
             GivenDataStoreIsRegistered(dataStore);
             GivenSingleTenenatRegisteredForDataStore(dataStore.Id, tenant);
 
-            TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
+            using (TenantContext.CreateFor(tenant.Id))
+            {
+                TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 
-            Assert.Equal(client.Tenant, tenant);
-            Assert.Equal(client.DataStore, dataStore);
+                Assert.Equal(client.Tenant, tenant);
+                Assert.Equal(client.DataStore, dataStore);
+            } 
+        }
+
+
+        [Theory, AutoData]
+        public async Task ClientCreatedForCorrectClientAndMultipleTenants(DataStore dataStore, Tenant[] tenants)
+        {
+            GivenDataStoreIsRegistered(dataStore);
+            GivenMultipleTenenatsRegisteredForDataStore(dataStore.Id, tenants);
+
+            foreach (var tenant in tenants)
+            {
+                using var tenantContext = TenantContext.CreateFor(tenant.Id);
+                
+                TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
+
+                Assert.Equal(client.Tenant, tenant);
+                Assert.Equal(client.DataStore, dataStore);
+            }
         }
 
         private Task<TestClient> WhenClientIsCreatedFor(DataStoreId dataStoreId) =>
             _clientFactory.Create<TestClient>(dataStoreId);
 
-        private void GivenSingleTenenatRegisteredForDataStore(DataStoreId id, Tenant tenant)
-        {
-            TenantContext.CreateFor(tenant.Id);
+        private void GivenSingleTenenatRegisteredForDataStore(DataStoreId dataStoreId, Tenant tenant) =>
+            GivenMultipleTenenatsRegisteredForDataStore(dataStoreId, new Tenant[] { tenant });
 
+        private void GivenMultipleTenenatsRegisteredForDataStore(DataStoreId dataStoreId, Tenant[] tenants)
+        {            
             var registeredTenants = new Dictionary<DataStoreId, Tenant[]>
             {
-                { id, new[] { tenant }  }
+                { dataStoreId, tenants }
             };
 
             ITenantResolver tenantResolver = new InMemoryTenantResolver(registeredTenants);
             ITenantIdResolver tanantIdResolver = new AmbientContextTenantIdResolver();
 
-            _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(id,
+            _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId,
                 cancel => Task.FromResult(tenantResolver),
                 cancel => Task.FromResult(tanantIdResolver));
         }
 
         private void GivenDataStoreIsRegistered(DataStore dataStore)
         {
+            IClientFactory<TestClient> testClientFactory = new TestClientFactory();
             _clientFactoryRegistry.RegisterClientFor(dataStore.Id,
-                   cancel => Task.FromResult((IClientFactory<TestClient>)new TestClientFactory()));
+                   cancel => Task.FromResult(testClientFactory));
 
             _dataStoreRegistry.Add(dataStore);
         }
