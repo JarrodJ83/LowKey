@@ -29,7 +29,7 @@ namespace LowKey.Data.UnitTests
         public async Task ClientCreatedForCorrectClientAndTenant(DataStore dataStore, Tenant tenant)
         {
             GivenDataStoreIsRegistered(dataStore);
-            GivenTenenatRegisteredForDataStore(dataStore.Id, tenant);
+            GivenSingleTenenatRegisteredForDataStore(dataStore.Id, tenant);
 
             TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 
@@ -40,7 +40,7 @@ namespace LowKey.Data.UnitTests
         private Task<TestClient> WhenClientIsCreatedFor(DataStoreId dataStoreId) =>
             _clientFactory.Create<TestClient>(dataStoreId);
 
-        private void GivenTenenatRegisteredForDataStore(DataStoreId id, Tenant tenant)
+        private void GivenSingleTenenatRegisteredForDataStore(DataStoreId id, Tenant tenant)
         {
             TenantContext.CreateFor(tenant.Id);
 
