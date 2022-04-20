@@ -19,25 +19,25 @@ namespace LowKey.Data.MultiTenancy
 
     public class TenantContext : IDisposable
     {
-        private readonly AsyncLocal<TenantId?> _tenantId;
-        public TenantId? TenantId => _tenantId.Value;
-
-        public static TenantContext? Current { get; private set; }
+        private static readonly AsyncLocal<TenantContext?> _tenantContext = new AsyncLocal<TenantContext?>();
+        public TenantId TenantId { get; private set; }
+        public static TenantContext? Current => _tenantContext.Value;
 
         private TenantContext(TenantId tenantId)
         {
-            _tenantId = new();
-            _tenantId.Value = tenantId;
-            Current = this;
+            TenantId = tenantId;
         }
 
-        public static TenantContext CreateFor(TenantId tenantId) =>
-            new TenantContext(tenantId);
+        public static TenantContext CreateFor(TenantId tenantId) { 
+            var ctx = new TenantContext(tenantId);
 
+            _tenantContext.Value = ctx;
+
+            return ctx;
+        }
         public void Dispose()
         {
-            _tenantId.Value = null;
-            Current = null;
+            _tenantContext.Value = null;
         }
     }
 }
