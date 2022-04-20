@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using LowKey.Data.Model;
 using LowKey.Data.MultiTenancy;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,5 +24,10 @@ namespace LowKey.Data.UnitTests
 
             Assert.Equal(tenantId, resolvedTenantId);
         }
+
+        [Fact]
+        public Task Throwss_When_Context_Not_Set() =>
+            Assert.ThrowsAsync<InvalidOperationException>(() => _ambientContextTenantIdResolver.Resolve());
+        
     }
 }
