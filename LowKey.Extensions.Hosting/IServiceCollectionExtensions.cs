@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Action<LowKeyConfiguration> configuration, LowKeyDataOptions? lowKeyDataOptions = default)
+        public static IServiceCollection AddLowKeyData(this IServiceCollection services, Action<LowKeyConfiguration> configuration)
         {
             services.AddSingleton<IDataStoreTenantResolver, DataStoreTenantResolver>();
             services.AddSingleton<IClientFactory, LowKeyClientFactory>();
