@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.Hosting
         public static LowKeyDataStoreConfig WithSqlServer(this LowKeyDataStoreConfig config, SqlConnectionStringBuilder connectionStringBuilder)
         {
             config.UseClientFactory(cancel => Task.FromResult((IClientFactory<DbConnection>)new SqlDbConnectionFactory(connectionStringBuilder)));
+            config.UseClientFactory(cancel => Task.FromResult((IClientFactory<SqlConnection>)new SqlDbConnectionFactory(connectionStringBuilder)));
 
             return config;
         }
