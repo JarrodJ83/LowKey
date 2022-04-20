@@ -36,11 +36,9 @@ namespace LowKey.Data.UnitTests
             {
                 TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 
-                Assert.Equal(client.Tenant, tenant);
-                Assert.Equal(client.DataStore, dataStore);
+                ThenClientIsForCorrectDataStoreAndTenant(client, dataStore, tenant);
             } 
         }
-
 
         [Theory, AutoData]
         public async Task ClientCreatedForCorrectClientAndMultipleTenants(DataStore dataStore, Tenant[] tenants)
@@ -54,8 +52,7 @@ namespace LowKey.Data.UnitTests
                 
                 TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 
-                Assert.Equal(client.Tenant, tenant);
-                Assert.Equal(client.DataStore, dataStore);
+                ThenClientIsForCorrectDataStoreAndTenant(client, dataStore, tenant);
             }
         }
 
@@ -87,6 +84,12 @@ namespace LowKey.Data.UnitTests
                    cancel => Task.FromResult(testClientFactory));
 
             _dataStoreRegistry.Add(dataStore);
+        }
+
+        private void ThenClientIsForCorrectDataStoreAndTenant(TestClient client, DataStore dataStore, Tenant tenant)
+        {
+            Assert.Equal(client.Tenant, tenant);
+            Assert.Equal(client.DataStore, dataStore);
         }
     }
 }

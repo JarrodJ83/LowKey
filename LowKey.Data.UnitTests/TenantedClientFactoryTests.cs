@@ -11,6 +11,7 @@ namespace LowKey.Data.UnitTests
         DataStoreRegistry _dataStoreRegistry;
         DataStoreClientFactoryRegistry _dataStoreClientFactoryRegistry;
         TenantedClientFactory _clientFactory;
+
         public TenantedClientFactoryTests()
         {
             _dataStoreRegistry = new DataStoreRegistry();
