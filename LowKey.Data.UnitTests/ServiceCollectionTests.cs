@@ -21,7 +21,7 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task SingleDataStoreWithSingleTenant(DataStoreId dataStoreId, string server, int port)
+        public async Task ResolvedTenantIsCorrect_SingleDataStoreWithSingleTenant(DataStoreId dataStoreId, string server, int port)
         {
             _services.AddLowKeyData(lowKey =>
             {
@@ -38,7 +38,7 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task SingleDataStoreWithMulitpleTenants(DataStoreId dataStoreId, Tenant[] tenants)
+        public async Task ResolvedTenantsAreCorrect_SingleDataStoreWithMulitpleTenants(DataStoreId dataStoreId, Tenant[] tenants)
         {
             var dataStoreTenants = new Dictionary<DataStoreId, Tenant[]> { { dataStoreId, tenants } };
             _services.AddLowKeyData(lowKey =>
@@ -60,7 +60,7 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task SingleDataStoreWithMulitpleTenantsQuerySession(DataStoreId dataStoreId, Tenant[] tenants)
+        public async Task ClientCreatedForCorrectStoreAndTenant_SingleDataStoreWithMulitpleTenants(DataStoreId dataStoreId, Tenant[] tenants)
         {
             var dataStoreTenants = new Dictionary<DataStoreId, Tenant[]> { { dataStoreId, tenants } };
             _services.AddLowKeyData(lowKey =>
@@ -81,6 +81,29 @@ namespace LowKey.Data.UnitTests
                 Assert.Equal(tenant, client.Tenant);
                 Assert.Equal(dataStoreId, client.DataStore.Id);
             }
+        }
+
+
+        [Theory, AutoData]
+        public async Task ClientCreatedForCorrectStoreAndTenant_SingleDataStoreWithSingleTenant(DataStoreId dataStoreId, Tenant tenant)
+        {
+            var dataStoreTenants = new Dictionary<DataStoreId, Tenant[]> { { dataStoreId, new[] { tenant } } };
+            _services.AddLowKeyData(lowKey =>
+            {
+                lowKey.AddStore(dataStoreId.Value,
+                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
+                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()))
+                    .WithTestClient();
+            });
+
+            var clientFactory = _services.BuildServiceProvider().GetService<IClientFactory>();
+            Assert.NotNull(clientFactory);
+
+            using var tenantContext = TenantContext.CreateFor(tenant.Id);
+            var client = await clientFactory.Create<TestClient>(dataStoreId);
+
+            Assert.Equal(tenant, client.Tenant);
+            Assert.Equal(dataStoreId, client.DataStore.Id);
         }
 
         Task<ITenantResolver> GetTenantResolverFor(DataStoreId dataStoreId) =>
