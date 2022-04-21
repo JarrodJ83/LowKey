@@ -42,14 +42,20 @@ namespace LowKey.Data.UnitTests
 
     public class TestTenantResolver : ITenantResolver, ITenantIdResolver
     {
-        public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default)
+        public DataStoreId DataStoreId { get; } = DataStoreId.Empty;
+        public Tenant Tenant { get; } = new Tenant(TenantId.Empty, string.Empty);
+
+        public TestTenantResolver(DataStoreId dataStoreId, Tenant tenant)
         {
-            throw new System.NotImplementedException();
+            DataStoreId = dataStoreId;
+            Tenant = tenant;
         }
 
-        public Task<TenantId> Resolve()
-        {
-            throw new System.NotImplementedException();
-        }
+        public TestTenantResolver() { }
+
+        public Task<Tenant> Resolve(DataStoreId dataStoreId, TenantId tenantId, CancellationToken cancel = default)
+            => Task.FromResult(Tenant);
+
+        public Task<TenantId> Resolve() => Task.FromResult(Tenant.Id);
     }
 }
