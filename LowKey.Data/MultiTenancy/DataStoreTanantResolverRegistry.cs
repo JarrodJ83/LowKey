@@ -17,7 +17,9 @@ namespace LowKey.Data
             _tenantIdResolverRegistry = new();
         }
 
-        public void RegisterTenantResolverFor(DataStoreId dataStoreId, Func<CancellationToken, Task<ITenantResolver>> tenantResolverFactory, Func<CancellationToken, Task<ITenantIdResolver>> tenantIdResolverFactory)
+        public void RegisterTenantResolverFor(DataStoreId dataStoreId, 
+            Func<CancellationToken, Task<ITenantResolver>> tenantResolverFactory, 
+            Func<CancellationToken, Task<ITenantIdResolver>> tenantIdResolverFactory)
         {
             _tenantResolverRegistry.Add(dataStoreId, tenantResolverFactory);
             _tenantIdResolverRegistry.Add(dataStoreId, tenantIdResolverFactory);
