@@ -32,7 +32,7 @@ namespace LowKey.Data.UnitTests
             GivenDataStoreIsRegistered(dataStore);
             GivenSingleTenenatRegisteredForDataStore(dataStore.Id, tenant);
 
-            using (TenantContext.CreateFor(tenant.Id))
+            using (TenantIdContext.CreateFor(tenant.Id))
             {
                 TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 
@@ -48,7 +48,7 @@ namespace LowKey.Data.UnitTests
 
             foreach (var tenant in tenants)
             {
-                using var tenantContext = TenantContext.CreateFor(tenant.Id);
+                using var tenantContext = TenantIdContext.CreateFor(tenant.Id);
                 
                 TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 

@@ -75,7 +75,7 @@ namespace LowKey.Data.UnitTests
             Assert.NotNull(clientFactory);
             foreach (var tenant in tenants)
             {
-                using var tenantContext = TenantContext.CreateFor(tenant.Id);
+                using var tenantContext = TenantIdContext.CreateFor(tenant.Id);
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 var client = await clientFactory.Create<TestClient>(dataStoreId);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -101,7 +101,7 @@ namespace LowKey.Data.UnitTests
             var clientFactory = _services.BuildServiceProvider().GetService<IClientFactory>();
             Assert.NotNull(clientFactory);
 
-            using var tenantContext = TenantContext.CreateFor(tenant.Id);
+            using var tenantContext = TenantIdContext.CreateFor(tenant.Id);
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var client = await clientFactory.Create<TestClient>(dataStoreId);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.

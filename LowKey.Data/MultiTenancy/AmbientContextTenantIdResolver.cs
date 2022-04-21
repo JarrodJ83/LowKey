@@ -1,5 +1,6 @@
 ﻿using LowKey.Data.Model;
 using System;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace LowKey.Data.MultiTenancy
     {
         public Task<TenantId> Resolve()
         {
-            var tenantId = TenantContext.Current?.TenantId;
+            var tenantId = TenantIdContext.Current?.TenantId;
 
             if (tenantId == null) throw new InvalidOperationException("TenantContext is not set");
 
@@ -17,27 +18,51 @@ namespace LowKey.Data.MultiTenancy
         }
     }
 
-    public class TenantContext : IDisposable
+    public class TenantIdContext : IDisposable
     {
-        private static readonly AsyncLocal<TenantContext?> _tenantContext = new AsyncLocal<TenantContext?>();
-        public TenantId TenantId { get; private set; }
-        public static TenantContext? Current => _tenantContext.Value;
+        private static AsyncLocal<ImmutableStack<TenantIdContext>> _tenantContextStack = new(); 
 
-        private TenantContext(TenantId tenantId)
+        private static ImmutableStack<TenantIdContext> TenantContextStack
+        {
+            get
+            {
+                if (_tenantContextStack.Value == null)
+                {
+                    _tenantContextStack.Value = ImmutableStack<TenantIdContext>.Empty;
+                }
+
+                return _tenantContextStack.Value;
+            }
+            set
+            {
+                _tenantContextStack.Value = value;
+            }
+        }
+
+        public static TenantIdContext? Current => 
+            TenantContextStack.IsEmpty ? null : TenantContextStack.Peek();
+
+        public TenantId TenantId { get; private set; }
+       
+        private TenantIdContext(TenantId tenantId)
         {
             TenantId = tenantId;
         }
 
-        public static TenantContext CreateFor(TenantId tenantId) { 
-            var ctx = new TenantContext(tenantId);
+        public static IDisposable CreateFor(TenantId tenantId) { 
+            var ctx = new TenantIdContext(tenantId);
 
-            _tenantContext.Value = ctx;
+            TenantContextStack = TenantContextStack.Push(ctx);
 
             return ctx;
         }
+
         public void Dispose()
         {
-            _tenantContext.Value = null;
+            if (!TenantContextStack.IsEmpty)
+            {
+                TenantContextStack = TenantContextStack.Pop();
+            }
         }
     }
 }
