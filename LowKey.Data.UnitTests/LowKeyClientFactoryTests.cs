@@ -73,8 +73,8 @@ namespace LowKey.Data.UnitTests
             ITenantIdResolver tanantIdResolver = new AmbientContextTenantIdResolver();
 
             _dataStoreTenantResolverRegistry.RegisterTenantResolverFor(dataStoreId,
-                cancel => Task.FromResult(tenantResolver),
-                cancel => Task.FromResult(tanantIdResolver));
+                () => tenantResolver,
+                () => tanantIdResolver);
         }
 
         private void GivenDataStoreIsRegistered(DataStore dataStore)

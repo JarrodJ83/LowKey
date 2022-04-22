@@ -17,25 +17,25 @@ namespace LowKey.Data.UnitTests
         }
 
         [Theory, AutoData]
-        public async Task Returns_Registered_TenantIdResolver(DataStoreId dataStoreId, TestTenantResolver testTenantResolver)
+        public void Returns_Registered_TenantIdResolver(DataStoreId dataStoreId, TestTenantResolver testTenantResolver)
         {
-            _dataStoreTanantResolverRegistry.RegisterTenantResolverFor(dataStoreId,
-                cancel => Task.FromResult((ITenantResolver)testTenantResolver),
-                cancel => Task.FromResult((ITenantIdResolver)testTenantResolver));
+            _dataStoreTanantResolverRegistry.RegisterTenantResolverFor(dataStoreId, 
+                () => testTenantResolver,
+                () => testTenantResolver);
 
-            var resolvedTenantIdResolver = await _dataStoreTanantResolverRegistry.GetTenantIdResolverFor(dataStoreId);
+            var resolvedTenantIdResolver = _dataStoreTanantResolverRegistry.GetTenantIdResolverFor(dataStoreId);
             Assert.Equal(testTenantResolver, resolvedTenantIdResolver);
 
-            var resolvedTenantResolver = await _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId);
+            var resolvedTenantResolver = _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId);
             Assert.Equal(testTenantResolver, resolvedTenantResolver);
         }
 
         [Theory, AutoData]
-        public async Task Throws_InvalidOperationException_If_Resolvers_NotFound(DataStoreId dataStoreId)
+        public void Throws_InvalidOperationException_If_Resolvers_NotFound(DataStoreId dataStoreId)
         {
-            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
                 _dataStoreTanantResolverRegistry.GetTenantIdResolverFor(dataStoreId));
-            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
                 _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId));
         }
     }

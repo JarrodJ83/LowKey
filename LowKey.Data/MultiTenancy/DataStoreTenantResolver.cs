@@ -15,10 +15,10 @@ namespace LowKey.Data
 
         public async Task<Tenant> Resolve(DataStoreId dataStoreId, CancellationToken cancellation = default)
         {
-            ITenantIdResolver tenantIdResolver = await _dataStoreTanantResolverRegistry.GetTenantIdResolverFor(dataStoreId, cancellation);
+            ITenantIdResolver tenantIdResolver = _dataStoreTanantResolverRegistry.GetTenantIdResolverFor(dataStoreId);
             TenantId tenantId = await tenantIdResolver.Resolve();
 
-            ITenantResolver tenantResolver = await _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId, cancellation);
+            ITenantResolver tenantResolver = _dataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId);
             Tenant tenant = await tenantResolver.Resolve(dataStoreId, tenantId, cancellation);
             return tenant;
         }

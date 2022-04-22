@@ -28,7 +28,7 @@ namespace LowKey.Data.UnitTests
                 lowKey.AddStore(dataStoreId.Value, server, port);
             });
 
-            var tenantResolver = await GetTenantResolverFor(dataStoreId);
+            var tenantResolver = GetTenantResolverFor(dataStoreId);
 
             Assert.IsType<SingleTenantResolver>(tenantResolver);
 
@@ -44,11 +44,11 @@ namespace LowKey.Data.UnitTests
             _services.AddLowKeyData(lowKey =>
             {
                 lowKey.AddStore(dataStoreId.Value,
-                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
-                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()));
+                    () => new InMemoryTenantResolver(dataStoreTenants),
+                    () => new AmbientContextTenantIdResolver());
             });
 
-            var tenantResolver = await GetTenantResolverFor(dataStoreId);
+            var tenantResolver = GetTenantResolverFor(dataStoreId);
 
             Assert.IsType<InMemoryTenantResolver>(tenantResolver);
 
@@ -66,8 +66,8 @@ namespace LowKey.Data.UnitTests
             _services.AddLowKeyData(lowKey =>
             {
                 lowKey.AddStore(dataStoreId.Value,
-                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
-                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()))
+                    () => new InMemoryTenantResolver(dataStoreTenants),
+                    () => new AmbientContextTenantIdResolver())
                     .WithTestClient();
             });
 
@@ -93,8 +93,8 @@ namespace LowKey.Data.UnitTests
             _services.AddLowKeyData(lowKey =>
             {
                 lowKey.AddStore(dataStoreId.Value,
-                    cancel => Task.FromResult((ITenantResolver)new InMemoryTenantResolver(dataStoreTenants)),
-                    cancel => Task.FromResult((ITenantIdResolver)new AmbientContextTenantIdResolver()))
+                    () => new InMemoryTenantResolver(dataStoreTenants),
+                    () => new AmbientContextTenantIdResolver())
                     .WithTestClient();
             });
 
@@ -110,7 +110,7 @@ namespace LowKey.Data.UnitTests
             Assert.Equal(dataStoreId, client.DataStore.Id);
         }
 
-        Task<ITenantResolver> GetTenantResolverFor(DataStoreId dataStoreId) =>
+        ITenantResolver GetTenantResolverFor(DataStoreId dataStoreId) =>
             GetConfig().DataStoreTanantResolverRegistry.GetTenantResolverFor(dataStoreId);
 
         LowKeyConfiguration GetConfig()

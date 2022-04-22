@@ -22,8 +22,8 @@ namespace LowKey.Data.UnitTests
             var testTenantResolver = new TestTenantResolver(dataStoreId, tenant);
 
             _dataStoreTanantResolverRegistry.RegisterTenantResolverFor(dataStoreId,
-                cancel => Task.FromResult((ITenantResolver)testTenantResolver),
-                cancel => Task.FromResult((ITenantIdResolver)testTenantResolver));
+                () => testTenantResolver,
+                () => testTenantResolver);
 
             var dataStoreTenant = await _dataStoreTenantResolver.Resolve(dataStoreId);
 

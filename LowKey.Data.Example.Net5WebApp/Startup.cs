@@ -39,8 +39,8 @@ namespace LowKey.Data.Example.Net5WebApp
                 // MULTI-TENANT
                 var tenantResolver = new QueryStringTenantResolver(new Tenant(server, server));
                 config.AddStore(new DataStore("sql-multi-tenant", "master"), 
-                    tenantResolverFactory: cancel => Task.FromResult((ITenantResolver)tenantResolver),
-                    tenantIdResolverFactory: cancel => Task.FromResult((ITenantIdResolver)tenantResolver))
+                    tenantResolverFactory: () => tenantResolver,
+                    tenantIdResolverFactory: () => tenantResolver)
                     .WithSqlServer(connBuilder);
             });
             

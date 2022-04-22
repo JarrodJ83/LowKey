@@ -36,10 +36,10 @@ namespace LowKey.Extensions.Hosting
             DataStoreRegistry = new();
         }
 
-        public LowKeyDataStoreConfig AddStore(string dataStore, Func<CancellationToken, Task<ITenantResolver>> tenantResolverFactory, Func<CancellationToken, Task<ITenantIdResolver>> tenantIdResolverFactory) =>
+        public LowKeyDataStoreConfig AddStore(string dataStore, Func<ITenantResolver> tenantResolverFactory, Func<ITenantIdResolver> tenantIdResolverFactory) =>
             AddStore(new DataStore(dataStore), tenantResolverFactory, tenantIdResolverFactory);
 
-        public LowKeyDataStoreConfig AddStore(DataStore dataStore, Func<CancellationToken, Task<ITenantResolver>> tenantResolverFactory, Func<CancellationToken, Task<ITenantIdResolver>> tenantIdResolverFactory)
+        public LowKeyDataStoreConfig AddStore(DataStore dataStore, Func<ITenantResolver> tenantResolverFactory, Func<ITenantIdResolver> tenantIdResolverFactory)
         {
             DataStoreTanantResolverRegistry.RegisterTenantResolverFor(dataStore.Id, tenantResolverFactory, tenantIdResolverFactory);
             DataStoreRegistry.Add(dataStore);
@@ -57,8 +57,8 @@ namespace LowKey.Extensions.Hosting
         {
             DataStoreRegistry.Add(dataStore);
             DataStoreTanantResolverRegistry.RegisterTenantResolverFor(dataStore.Id,
-                cancel => Task.FromResult((ITenantResolver)new SingleTenantResolver(tenant)),
-                cancel => Task.FromResult((ITenantIdResolver)new SingleTenantIdResolver(tenant.Id)));
+                () => new SingleTenantResolver(tenant),
+                () => new SingleTenantIdResolver(tenant.Id));
 
             return new LowKeyDataStoreConfig(this, dataStore);
         }
