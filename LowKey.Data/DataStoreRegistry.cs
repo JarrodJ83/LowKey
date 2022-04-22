@@ -7,9 +7,9 @@ namespace LowKey.Data
 {
     public class DataStoreRegistry
     {
-        private readonly HashSet<DataStore> _dataStores;
+        private readonly ISet<DataStore> _dataStores;
 
-        public DataStoreRegistry(HashSet<DataStore>? dataStores = null)
+        public DataStoreRegistry(ISet<DataStore>? dataStores = null)
         {
             _dataStores = dataStores ?? new HashSet<DataStore>();
         }
