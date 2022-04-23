@@ -20,6 +20,7 @@ jobs:
     - name: Build
       run: dotnet build LowKey.sln
   test: 
+    runs-on: self-hosted
     steps:
       - name: Test
-      run: dotnet test LowKey.sln --no-build --verbosity normal
+        run: dotnet test LowKey.sln --no-build --verbosity normal
