@@ -21,6 +21,7 @@ jobs:
       run: dotnet build LowKey.sln
   test: 
     runs-on: self-hosted
+    needs: [build]
     steps:
       - name: Test
         run: dotnet test LowKey.sln --no-build --verbosity normal
