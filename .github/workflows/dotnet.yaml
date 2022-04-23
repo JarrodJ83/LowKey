@@ -30,4 +30,6 @@ jobs:
     needs: [Test]
     steps:
       - name: Publish Nuget Packages
-        run: dotnet nuget pack LowKey.Data/LowKey.Data.csproj
+        run: dotnet pack LowKey.Data/LowKey.Data.csproj
+             dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj
+             dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj
