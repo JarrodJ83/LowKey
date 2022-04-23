@@ -17,9 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies
+    - name: Restore LowKey.sln dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build LowKey.sln --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test LowKey.sln --no-build --verbosity normal
