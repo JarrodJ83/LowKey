@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.UnitTests", "LowKey.Data.UnitTests\LowKey.Data.UnitTests.csproj", "{B4E5DCF3-1C7D-4753-BE41-8EEF7BFA6936}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{F87812C4-C556-473C-92CC-EBE7F75D279F}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E453973D-C0FD-4494-92FB-2620557C8810}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{BDBDEEEB-3902-4256-8EA7-7567A7BBCC3E}"
+	ProjectSection(SolutionItems) = preProject
+		dotnet.yaml = dotnet.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
