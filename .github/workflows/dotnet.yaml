@@ -31,6 +31,9 @@ jobs:
     steps:
       - name: Publish Nuget Packages
         run: |
+            $branch = ${{github.head_ref}}
+
             dotnet pack LowKey.Data/LowKey.Data.csproj
             dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj
             dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj
+            
