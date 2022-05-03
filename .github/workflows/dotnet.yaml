@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Publish Nuget Packages
         run: |
-            $branch = ${{github.head_ref}}
+            $branch = ${{ github.ref }}
 
             $prerelease = ""
 
@@ -41,8 +41,6 @@ jobs:
 
             Write-Host "Branch: $branch"
             Write-Host "Pre-Release: $prerelease"
-
-            ls
 
             if($prerelease) {
                 dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease
