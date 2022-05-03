@@ -31,7 +31,8 @@ jobs:
     steps:
       - name: Publish Nuget Packages
         run: |
-            $branch = ${{ github.ref }}
+            $branchParts = "${{ github.ref }}".Split('/');
+            $branch = $branchParts[$branchParts.Length - 1]
 
             $prerelease = ""
 
