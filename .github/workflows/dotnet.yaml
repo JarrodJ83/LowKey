@@ -33,10 +33,18 @@ jobs:
         run: |
             $branch = ${{github.head_ref}}
 
+            
             $prerelease = ""
 
             if($branch -ne "main") {
                 $prerelease = $branch.Replace("/", "-")
             }
 
-            dotnet pack -c Release --no-build --no-restore --version-suffix $prerelease
+            Write-Host "Branch: $branch"
+            Write-Host "Pre-Release: $prerelease"
+
+            if($prerelease) {
+                dotnet pack -c Release --no-build --no-restore --version-suffix $prerelease
+            } else {
+                dotnet pack -c Release --no-build --no-restore
+            }
