@@ -44,7 +44,7 @@ jobs:
             Write-Host "Pre-Release: $prerelease"
 
             if($prerelease) {
-                dotnet pack -c Release --no-build --no-restore --version-suffix $prerelease
+                dotnet pack LowKey.sln -c Release --no-build --no-restore --version-suffix $prerelease
             } else {
-                dotnet pack -c Release --no-build --no-restore
+                dotnet pack LowKey.sln -c Release --no-build --no-restore
             }
