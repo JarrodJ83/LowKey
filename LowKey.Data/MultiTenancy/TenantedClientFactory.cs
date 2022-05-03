@@ -15,11 +15,11 @@ namespace LowKey.Data.MultiTenancy
             _dataStoreRegistry = dataStoreRegistry;
         }
 
-        public async Task<TClient> GetClientFor<TClient>(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
+        public Task<TClient> GetClientFor<TClient>(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
         {
-            IClientFactory<TClient> clientFactory = await _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId, cancellation);
+            IClientFactory<TClient> clientFactory = _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId);
             DataStore dataStore = _dataStoreRegistry.GetDataStore(dataStoreId);
-            return await clientFactory.CreateForStore(dataStore, tenant);
+            return clientFactory.CreateForStore(dataStore, tenant, cancellation);
         }
     }
 }

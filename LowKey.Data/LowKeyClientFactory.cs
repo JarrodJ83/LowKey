@@ -24,11 +24,11 @@ namespace LowKey.Data
             return await GetClientFor<TClient>(dataStoreId, tenant, cancel);
         }
 
-        async Task<TClient> GetClientFor<TClient>(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
+        Task<TClient> GetClientFor<TClient>(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
         {
-            IClientFactory<TClient> clientFactory = await _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId, cancellation);
+            IClientFactory<TClient> clientFactory = _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId);
             DataStore dataStore = _dataStoreRegistry.GetDataStore(dataStoreId);
-            return await clientFactory.CreateForStore(dataStore, tenant);
+            return clientFactory.CreateForStore(dataStore, tenant, cancellation);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LowKey.Data.Model;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LowKey.Data.Sql
@@ -14,7 +15,7 @@ namespace LowKey.Data.Sql
             _sqlConnectionStringBuilder = sqlConnectionStringBuilder;
         }
 
-        Task<DbConnection> IClientFactory<DbConnection>.CreateForStore(DataStore dataStore, Tenant tenant)
+        Task<DbConnection> IClientFactory<DbConnection>.CreateForStore(DataStore dataStore, Tenant tenant, CancellationToken cancel)
         {
             ConfigureConnectionStringBuilder(dataStore, tenant);
 
@@ -22,7 +23,7 @@ namespace LowKey.Data.Sql
             return Task.FromResult(connection);
         }
 
-        Task<SqlConnection> IClientFactory<SqlConnection>.CreateForStore(DataStore dataStore, Tenant tenant)
+        Task<SqlConnection> IClientFactory<SqlConnection>.CreateForStore(DataStore dataStore, Tenant tenant, CancellationToken cancel)
         {
             ConfigureConnectionStringBuilder(dataStore, tenant);
 

@@ -1,8 +1,6 @@
 ﻿using LowKey.Data;
 using LowKey.Data.Model;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LowKey.Extensions.Hosting
 {
@@ -18,7 +16,7 @@ namespace LowKey.Extensions.Hosting
             DataStore = dataStore;
         }
 
-        public void UseClientFactory<TClient>(Func<CancellationToken, Task<IClientFactory<TClient>>> clientFactoryResolver)
+        public void UseClientFactory<TClient>(Func<IClientFactory<TClient>> clientFactoryResolver)
         {
             _parentConfiguration.DataStoreClientFactoryRegistry.RegisterClientFor(DataStore.Id, clientFactoryResolver);
         }

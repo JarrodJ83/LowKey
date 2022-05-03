@@ -79,8 +79,7 @@ namespace LowKey.Data.UnitTests
         private void GivenDataStoreIsRegistered(DataStore dataStore)
         {
             IClientFactory<TestClient> testClientFactory = new TestClientFactory();
-            _clientFactoryRegistry.RegisterClientFor(dataStore.Id,
-                   cancel => Task.FromResult(testClientFactory));
+            _clientFactoryRegistry.RegisterClientFor(dataStore.Id, () => testClientFactory);
 
             _dataStoreRegistry.Add(dataStore);
         }

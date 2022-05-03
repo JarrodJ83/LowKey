@@ -1,8 +1,6 @@
 ﻿using LowKey.Data.Model;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
@@ -10,17 +8,17 @@ namespace LowKey.Data
     {
         private readonly Dictionary<DataStoreId, object> _dataStoreClientTypes = new();
 
-        public void RegisterClientFor<TClient>(DataStoreId dataStore, Func<CancellationToken, Task<IClientFactory<TClient>>> clientFactoryResolver)
+        public void RegisterClientFor<TClient>(DataStoreId dataStore, Func<IClientFactory<TClient>> clientFactoryResolver)
         {
             _dataStoreClientTypes.Add(dataStore, clientFactoryResolver);
         }
 
-        public Task<IClientFactory<TClient>> ResolveClientFactory<TClient>(DataStoreId dataStore, CancellationToken cancellation = default)
+        public IClientFactory<TClient> ResolveClientFactory<TClient>(DataStoreId dataStore)
         {
             if(_dataStoreClientTypes.TryGetValue(dataStore, out var clientFactoryResolver))
             {
-                var resolver = (Func<CancellationToken, Task<IClientFactory<TClient>>>)clientFactoryResolver;
-                return resolver(cancellation);
+                var resolver = (Func<IClientFactory<TClient>>)clientFactoryResolver;
+                return resolver();
             }
 
             throw new InvalidOperationException($"No {nameof(IClientFactory<TClient>)} registered for \"{dataStore.Value}\" DataStore");
