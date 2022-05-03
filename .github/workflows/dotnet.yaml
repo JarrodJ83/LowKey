@@ -33,7 +33,6 @@ jobs:
         run: |
             $branch = ${{github.head_ref}}
 
-            
             $prerelease = ""
 
             if($branch -ne "main") {
@@ -44,7 +43,11 @@ jobs:
             Write-Host "Pre-Release: $prerelease"
 
             if($prerelease) {
-                dotnet pack LowKey.sln -c Release --no-build --no-restore --version-suffix $prerelease
+                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease
+                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease
+                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease
             } else {
-                dotnet pack LowKey.sln -c Release --no-build --no-restore
+                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore
+                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore
+                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore
             }
