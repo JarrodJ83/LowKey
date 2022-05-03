@@ -43,12 +43,16 @@ jobs:
             Write-Host "Branch: $branch"
             Write-Host "Pre-Release: $prerelease"
 
+            $output = "packages"
+
             if($prerelease) {
-                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease
-                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease
-                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease
+                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
+                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
+                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
             } else {
-                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore
-                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore
-                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore
+                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore -o $output
+                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore -o $output
+                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output
             }
+
+            dotnet nuget push "$output/*.nupkg" --api-key "${{ env.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
