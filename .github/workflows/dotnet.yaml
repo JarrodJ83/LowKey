@@ -37,7 +37,7 @@ jobs:
             $prerelease = ""
 
             if($branch -ne "main") {
-                $prerelease = $branch.Replace("/", "-")
+                $prerelease = $branch.Replace("/", "-") + ".${{ GITHUB_RUN_ATTEMPT }}"
             }
 
             Write-Host "Branch: $branch"
@@ -55,4 +55,6 @@ jobs:
                 dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output
             }
 
-            dotnet nuget push "$output/*.nupkg" --api-key "${{ env.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+            ls $output
+
+             dotnet nuget push "**/$output/**" --api-key ${{ env.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
