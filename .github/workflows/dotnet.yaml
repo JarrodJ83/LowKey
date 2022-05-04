@@ -37,7 +37,7 @@ jobs:
             $prerelease = ""
 
             if($branch -ne "main") {
-                $prerelease = $branch.Replace("/", "-") + ".${{ GITHUB_RUN_ATTEMPT }}"
+                $prerelease = $branch.Replace("/", "-") + ".${{ github.run_attempt }}"
             }
 
             Write-Host "Branch: $branch"
