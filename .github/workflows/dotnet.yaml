@@ -46,13 +46,13 @@ jobs:
             $output = "packages"
 
             if($prerelease) {
-                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
-                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
-                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
+                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output --include-symbols
+                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output --include-symbols
+                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output --include-symbols
             } else {
-                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore -o $output
-                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore -o $output
-                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output
+                dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore -o $output --include-symbols
+                dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore -o $output --include-symbols
+                dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output --include-symbols
             }
 
              dotnet nuget push "**/$output/**" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
