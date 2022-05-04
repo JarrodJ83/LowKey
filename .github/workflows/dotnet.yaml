@@ -55,6 +55,6 @@ jobs:
                 dotnet pack LowKey.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output
             }
 
-             Write-Host "API KEY: ${{ env.NUGET_API_KEY }}"
+             Write-Host "API KEY: ${{ secrets.NUGET_API_KEY }}"
 
-             dotnet nuget push "**/$output/**" --api-key "${{ env.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+             dotnet nuget push "**/$output/**" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
