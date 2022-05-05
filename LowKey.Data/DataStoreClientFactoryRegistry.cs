@@ -6,16 +6,16 @@ namespace LowKey.Data
 {
     public class DataStoreClientFactoryRegistry
     {
-        private readonly Dictionary<DataStoreId, object> _dataStoreClientTypes = new();
+        private readonly Dictionary<(DataStoreId, Type), object> _dataStoreClientTypes = new();
 
         public void RegisterClientFor<TClient>(DataStoreId dataStore, Func<IClientFactory<TClient>> clientFactoryResolver)
         {
-            _dataStoreClientTypes.Add(dataStore, clientFactoryResolver);
+            _dataStoreClientTypes.Add((dataStore, typeof(TClient)), clientFactoryResolver);
         }
 
         public IClientFactory<TClient> ResolveClientFactory<TClient>(DataStoreId dataStore)
         {
-            if(_dataStoreClientTypes.TryGetValue(dataStore, out var clientFactoryResolver))
+            if(_dataStoreClientTypes.TryGetValue((dataStore, typeof(TClient)), out var clientFactoryResolver))
             {
                 var resolver = (Func<IClientFactory<TClient>>)clientFactoryResolver;
                 return resolver();

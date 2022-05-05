@@ -8,9 +8,11 @@ services:
       dockerfile: LowKey.Data.Example.Net5WebApp/Dockerfile
     environment:
       SQL_USERNAME: sa
-      SQL_PASSWORD: "Your_password123"
+      SQL_PASSWORD: Your_password123
       SQL_DATABASE: master
       SQL_SERVER: sql-tenant1
+      NPGSQL_DATABASE: test
+      NPGSQL_SERVER: npsql-tenant1
   sql-tenant1:
     image: "mcr.microsoft.com/mssql/server"
     environment:
@@ -21,3 +23,15 @@ services:
     environment:
       SA_PASSWORD: "Your_password123"
       ACCEPT_EULA: "Y"
+  npsql-tenant1:
+    image: postgres
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: Your_password123 
+      POSTGRES_DB: test 
+  npsql-tenant2:
+    image: postgres
+    environment:
+      POSTGRES_USER: sa 
+      POSTGRES_PASSWORD: Your_password123 
+      POSTGRES_DB: test 

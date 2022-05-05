@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
 
 namespace LowKey.Data.Example.Net5WebApp
 {
@@ -19,28 +20,51 @@ namespace LowKey.Data.Example.Net5WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder
+            var sqlConnBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder
             {
                 UserID = Configuration.GetValue<string>("SQL_USERNAME"),
                 Password = Configuration.GetValue<string>("SQL_PASSWORD")
             };
-            var database = Configuration.GetValue<string>("SQL_DATABASE");
-            var server = Configuration.GetValue<string>("SQL_SERVER");
+            var sqlDatabase = Configuration.GetValue<string>("SQL_DATABASE");
+            var sqlServer = Configuration.GetValue<string>("SQL_SERVER");
+
+            var postgresConnBuilder = new NpgsqlConnectionStringBuilder
+            {
+                Username = Configuration.GetValue<string>("SQL_USERNAME"),
+                Password = Configuration.GetValue<string>("SQL_PASSWORD")
+            };
+
+            var postgresDatabase = Configuration.GetValue<string>("NPGSQL_DATABASE");
+            var postgresServer = Configuration.GetValue<string>("NPGSQL_SERVER");
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddLowKeyData(config =>
             {
+                // SQL // 
+
                 // SINGLE TENANT
-                config.AddStore(new DataStore("sql", database), server).WithSqlServer(connBuilder);
+                config.AddStore(new DataStore(DataStores.Sql, sqlDatabase), sqlServer).WithSqlServer(sqlConnBuilder);
 
 
                 // MULTI-TENANT
-                var tenantResolver = new QueryStringTenantResolver(new Tenant(server, server));
-                config.AddStore(new DataStore("sql-multi-tenant", "master"), 
+                var tenantResolver = new QueryStringTenantResolver(new Tenant(sqlServer, sqlServer));
+                config.AddStore(new DataStore(DataStores.SqlMultiTenant, sqlDatabase), 
                     tenantResolverFactory: () => tenantResolver,
-                    tenantIdResolverFactory: () => tenantResolver)
-                    .WithSqlServer(connBuilder);
+                    tenantIdResolverFactory: () => tenantResolver).WithSqlServer(sqlConnBuilder);
+
+
+
+                // POSTGRES //
+
+                // SINGLE TENANT
+                config.AddStore(new DataStore(DataStores.Postgres, postgresDatabase), postgresServer).WithPostgres(postgresConnBuilder);
+
+
+                // MULTI-TENANT
+                config.AddStore(new DataStore(DataStores.PostgresMultiTenant, postgresDatabase),
+                    tenantResolverFactory: () => tenantResolver,
+                    tenantIdResolverFactory: () => tenantResolver).WithPostgres(postgresConnBuilder);
             });
             
             services.AddRazorPages();

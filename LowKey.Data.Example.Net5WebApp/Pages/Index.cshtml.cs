@@ -3,7 +3,9 @@ using LowKey.Data.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace LowKey.Data.Example.Net5WebApp.Pages
@@ -23,11 +25,37 @@ namespace LowKey.Data.Example.Net5WebApp.Pages
 
         public async Task OnGet()
         {
-            DataStoreId dataStoreId = new DataStoreId(_httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant") ? "sql-multi-tenant" : "sql");
+            bool useTenantedStore = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("tenant");
 
-            DbConnection client = await _clientFactory.Create<DbConnection>(dataStoreId);
+            await RunSqlQuery(useTenantedStore);
+            await RunNpgsqlQuery(useTenantedStore);
+        }
 
-            int result = await client.QueryFirstAsync<int>("select 1");
+        async Task RunSqlQuery(bool useTenantedStore)
+        {
+            var dataStoreId = new DataStoreId(useTenantedStore ? DataStores.SqlMultiTenant : DataStores.Sql);
+            DbConnection dbConnClient = await _clientFactory.Create<DbConnection>(dataStoreId);
+
+            await dbConnClient.QueryFirstAsync<int>("select 1");
+
+
+            SqlConnection sqlConnClient = await _clientFactory.Create<SqlConnection>(dataStoreId);
+
+            await sqlConnClient.QueryFirstAsync<int>("select 1");
+        }
+
+        async Task RunNpgsqlQuery(bool useTenantedStore)
+        {
+            var dataStoreId = new DataStoreId(useTenantedStore ? DataStores.PostgresMultiTenant : DataStores.Postgres);
+
+            DbConnection dbConnClient = await _clientFactory.Create<DbConnection>(dataStoreId);
+
+            await dbConnClient.QueryFirstAsync<int>("select 1");
+
+
+            NpgsqlConnection npgsqlConnClient = await _clientFactory.Create<NpgsqlConnection>(dataStoreId);
+
+            await npgsqlConnClient.QueryFirstAsync<int>("select 1");
         }
     }
 }
