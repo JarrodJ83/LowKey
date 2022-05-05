@@ -3,6 +3,7 @@ using LowKey.Data.Sql;
 using LowKey.Data.Extensions.Hosting;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace Microsoft.Extensions.Hosting
 {
@@ -10,6 +11,7 @@ namespace Microsoft.Extensions.Hosting
     {
         public static LowKeyDataStoreConfig WithSqlServer(this LowKeyDataStoreConfig config, SqlConnectionStringBuilder connectionStringBuilder)
         {
+            config.UseClientFactory(() => (IClientFactory<IDbConnection>)new SqlDbConnectionFactory(connectionStringBuilder));
             config.UseClientFactory(() => (IClientFactory<DbConnection>)new SqlDbConnectionFactory(connectionStringBuilder));
             config.UseClientFactory(() => (IClientFactory<SqlConnection>)new SqlDbConnectionFactory(connectionStringBuilder));
 
