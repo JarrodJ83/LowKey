@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LowKey.Data.Extensions.Hosting\LowKey.Data.Extensions.Hosting.csproj" />
     <ProjectReference Include="..\LowKey.Data.Postgres\LowKey.Data.Postgres.csproj" />
     <ProjectReference Include="..\LowKey.Data.Sql\LowKey.Data.Sql.csproj" />
     <ProjectReference Include="..\LowKey.Data\LowKey.Data.csproj" />
-    <ProjectReference Include="..\LowKey.Extensions.Hosting\LowKey.Data.Extensions.Hosting.csproj" />
   </ItemGroup>
 
 </Project>
