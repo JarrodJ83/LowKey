@@ -45,6 +45,7 @@ jobs:
             $output = "packages"
 
             if($prerelease -ne "") {
+                Write-Host "Branch: Creating Prerelease $prerelease packages"
                 dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Postgres/LowKey.Data.Postgres.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
