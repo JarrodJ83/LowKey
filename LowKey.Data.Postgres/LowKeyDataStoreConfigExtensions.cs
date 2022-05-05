@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class NpsqlDataStoreConfigExtensions
     {
-        public static LowKeyDataStoreConfig WithSqlServer(this LowKeyDataStoreConfig config, NpgsqlConnectionStringBuilder connectionStringBuilder)
+        public static LowKeyDataStoreConfig WithPostgres(this LowKeyDataStoreConfig config, NpgsqlConnectionStringBuilder connectionStringBuilder)
         {
             config.UseClientFactory(() => (IClientFactory<DbConnection>)new NpgsqlDbConnectionFactory(connectionStringBuilder));
             config.UseClientFactory(() => (IClientFactory<NpgsqlConnection>)new NpgsqlDbConnectionFactory(connectionStringBuilder));
