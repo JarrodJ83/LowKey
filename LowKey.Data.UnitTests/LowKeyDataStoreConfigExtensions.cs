@@ -1,6 +1,6 @@
 ﻿using LowKey.Data;
 using LowKey.Data.UnitTests;
-using LowKey.Extensions.Hosting;
+using LowKey.Data.Extensions.Hosting;
 
 namespace Microsoft.Extensions.Hosting
 {

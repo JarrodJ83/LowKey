@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using LowKey.Data.Model;
 using LowKey.Data.MultiTenancy;
-using LowKey.Extensions.Hosting;
+using LowKey.Data.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;

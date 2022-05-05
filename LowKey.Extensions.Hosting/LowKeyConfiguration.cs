@@ -1,8 +1,7 @@
-﻿using LowKey.Data;
-using LowKey.Data.Model;
+﻿using LowKey.Data.Model;
 using System;
 
-namespace LowKey.Extensions.Hosting
+namespace LowKey.Data.Extensions.Hosting
 {
     public class LowKeyDataStoreConfig
     {

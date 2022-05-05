@@ -1,6 +1,6 @@
 ﻿using LowKey.Data;
+using LowKey.Data.Extensions.Hosting;
 using LowKey.Data.MultiTenancy;
-using LowKey.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
