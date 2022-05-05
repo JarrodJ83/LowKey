@@ -7,8 +7,4 @@
 	<Authors>Jarrod Johnson (@JarrodJ83)</Authors>	  
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
-  </ItemGroup>
-
 </Project>
