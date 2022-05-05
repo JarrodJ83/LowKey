@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data", "LowKey.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Sql", "LowKey.Data.Sql\LowKey.Data.Sql.csproj", "{3476403F-8BD9-4880-877E-E20CF3FFAEFE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Extensions.Hosting", "LowKey.Extensions.Hosting\LowKey.Data.Extensions.Hosting.csproj", "{50E9EC23-AACA-40B0-AF8A-6F427351EB23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Extensions.Hosting", "LowKey.Data.Extensions.Hosting\LowKey.Data.Extensions.Hosting.csproj", "{50E9EC23-AACA-40B0-AF8A-6F427351EB23}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Example.Net5WebApp", "LowKey.Data.Example.Net5WebApp\LowKey.Data.Example.Net5WebApp.csproj", "{EC8A955E-F20A-4EC4-8547-F93BB22998E4}"
 EndProject
