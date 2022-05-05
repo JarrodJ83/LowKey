@@ -48,10 +48,12 @@ jobs:
             if($prerelease) {
                 dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
+                dotnet pack LowKey.Data.Postgres/LowKey.Data.Postgres.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
             } else {
                 dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore -o $output
                 dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore -o $output
+                dotnet pack LowKey.Data.Postgres/LowKey.Data.Postgres.csproj -c Release --no-build --no-restore -o $output
                 dotnet pack LowKey.Data.Extensions.Hosting/LowKey.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output
             }
 
