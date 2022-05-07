@@ -4,7 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<VersionPrefix>0.0.2</VersionPrefix>
-	<Authors>Jarrod Johnson (@JarrodJ83)</Authors>	  
+	<Authors>Jarrod Johnson (@JarrodJ83)</Authors>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
+  </ItemGroup>
 
 </Project>
