@@ -25,7 +25,7 @@ LowKey is made of a few basic concepts:
 
 ### Data Stores
 
-In LowKey a DataStore represents an external storage system you'd like to connect to. It's represented by an Id which is used to reference it when establishing a connection and a Name that's to represent the actual store. For example, the Master database of a SQL server might be represented as `new DataStore("sql-master", "master")`
+In LowKey a DataStore represents an external storage system you'd like to connect to. It's represented by an Id which is used to reference it when establishing a connection and a Name that's to represent the actual store. For example, if you had a SQL database named "App" it could be represented as `new DataStore("sql-app", "app")`
 
 ### Tenants
 
@@ -44,12 +44,12 @@ DataStores can be registered as single or multi-tenant. When executing LowKey wi
 Below is an example of configuring and using a single tenanted connection to a SQL Database.
 
 #### Configuration
-This configuration will connect to the `master` database on `localhost` using the supplied `SqlConnectionStringBuilder` by replacing the builder's `InitialCatalog` and `Server` at runtime.
+This configuration will connect to the `app` database on `localhost` using the supplied `SqlConnectionStringBuilder` by replacing the builder's `InitialCatalog` and `Server` at runtime.
 
 ```
 services.AddLowKeyData(config => 
 {
-        config.AddStore(new DataStore(id: "sql", name: "master"), server: "localhost")
+        config.AddStore(new DataStore(id: "sql", name: "app"), server: "localhost")
                 .WithSqlServer(new SqlConnectionStringBuilder
                 {
                         UserID = Configuration.GetValue<string>("SQL_USERNAME"),
@@ -84,13 +84,13 @@ public class IndexModel : PageModel
 Below is an example of configuring and using a multi-tenant configuratoin to a SQL Server  Database. In order to leverage multi-tenancy LowKey needs to know how to resolve two things: The `TenantId` and the actual `Tenant`. The `TenantId` will likely come from something like Jwt for the authenticated user. This is the ID used to lookup the Tenant from your system. You must implement and provide two interfaces to tell LowKey how to obtain this data: `ITenantIdResolver` and `ITenantResolver`.
 
 #### Configuration
-This configuration will connect to the `master` database on `localhost` using the supplied `SqlConnectionStringBuilder` by replacing the builder's `InitialCatalog` and `Server` at runtime from the Tenant looked up by the using the supplied `ITenantIdResolver` and `ITenantResolver`.
+This configuration will connect to the `app` database on `localhost` using the supplied `SqlConnectionStringBuilder` by replacing the builder's `InitialCatalog` and `Server` at runtime from the Tenant looked up by the using the supplied `ITenantIdResolver` and `ITenantResolver`.
 
 ```
 services.AddLowKeyData(config => 
 {
         var tenantResolver = new QueryStringTenantResolver(new Tenant(server, server));
-        config.AddStore(new DataStore("sql-multi-tenant", "master"),
+        config.AddStore(new DataStore("sql-multi-tenant", "app"),
                 tenantResolverFactory: () => tenantResolver,
                 tenantIdResolverFactory: () => tenantResolver)
                         .WithSqlServer(new SqlConnectionStringBuilder
