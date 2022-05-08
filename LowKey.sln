@@ -22,9 +22,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{BDBDEEEB-3902-4256-8EA7-7567A7BBCC3E}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yaml = .github\workflows\dotnet.yaml
+		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LowKey.Data.Postgres", "LowKey.Data.Postgres\LowKey.Data.Postgres.csproj", "{202A784C-D091-4E91-981E-BD3CB1D5028A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Postgres", "LowKey.Data.Postgres\LowKey.Data.Postgres.csproj", "{202A784C-D091-4E91-981E-BD3CB1D5028A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

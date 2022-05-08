@@ -1,6 +1,12 @@
 # LowKey
 
-LowKey aims to be an unobtrusive way of creating pre-configured, connected clients to your different data stores (SQL, Redis, Postgres, etc)
+Tired of having to build ways of getting configured clients for your data stores in each of your dotnet projects? Have a multi-tenant database configuration and need an easy way to get a configured client to your data stores? LowKey aims to be an unobtrusive way of creating pre-configured, connected clients to your different data stores (SQL, Redis, Postgres, etc) with multi-tenancy built in.
+
+## Why would I use LowKey?
+
+LowKey provides a simple way for registering your data stores for single or multi-tenancy and accessing them by name anywhere you need by injecting an instance of `IClientFactory`. This means you don't have to write any code for creating clients or dealing with multi-tenancy. LowKey will handle this for you.
+
+A great example of how LowKey simplifies things is when you need different connections for read and writes. Given this you can't simply just register your client with a DI framework and inject it as there would be no way to inject a read vs write connected client (at least not easily and clearly). At this point you're left with the option to write custom code to handle this or use LowKey. With LowKey you can, for example, register a client connected to your write instance with the name "write" and a client configured for your readonly instane with the name "read" and access them when needed using `IClientFactory`. 
 
 ## Key Design Points
 
@@ -11,6 +17,7 @@ LowKey aims to be an unobtrusive way of creating pre-configured, connected clien
 ## Currently Supported
 
 * SQL: LowKey.Data.Sql
+* Postgres: LowKey.Data.Postgres
 
 ## Key Concepts
 
@@ -45,8 +52,8 @@ services.AddLowKeyData(config =>
         config.AddStore(new DataStore(id: "sql", name: "master"), server: "localhost")
                 .WithSqlServer(new SqlConnectionStringBuilder
                 {
-                UserID = Configuration.GetValue<string>("SQL_USERNAME"),
-                Password = Configuration.GetValue<string>("SQL_PASSWORD")
+                        UserID = Configuration.GetValue<string>("SQL_USERNAME"),
+                        Password = Configuration.GetValue<string>("SQL_PASSWORD")
                 });
 });
 ```
