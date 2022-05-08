@@ -6,7 +6,7 @@ Tired of having to build ways of getting configured clients for your data stores
 
 LowKey provides a simple way for registering your data stores for single or multi-tenancy and accessing them by name anywhere you need by injecting an instance of `IClientFactory`. This means you don't have to write any code for creating clients or dealing with multi-tenancy. LowKey will handle this for you.
 
-A great example of how LowKey simplifies things is when you need different connections for read and writes. Given this you can't simply just register your client with a DI framework and inject it as there would be no way to inject a read vs write connected client (at least not easily and clearly). At this point you're left with the option to write custom code to handle this or use LowKey. With LowKey you can, for example, register a client connected to your write instance with the name "write" and a client configured for your readonly instane with the name "read" and access them when needed using `IClientFactory`. 
+A great example of how LowKey simplifies things is when you need different connections for reads and writes. Given this you can't simply just register your client with a DI framework and inject it as there would be no way to inject a read vs write connected client (at least not easily and clearly). At this point you're left with the option to write custom code to handle this or use LowKey. With LowKey you can, for example, register a client configured for your write instance with the name "write" and a client configured for your readonly instance with the name "read" and access them when needed using `IClientFactory`. 
 
 ## Key Design Points
 
