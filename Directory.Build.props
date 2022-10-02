@@ -1,0 +1,16 @@
+<Project>
+
+  <PropertyGroup>	
+	<VersionPrefix>0.0.2</VersionPrefix>	
+	<TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Authors>Jarrod Johnson (@JarrodJ83)</Authors>
+	<Owners>Jarrod Johnson (@JarrodJ83)</Owners>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<ProjectUrl>https://github.com/JarrodJ83/LowKey</ProjectUrl>
+	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+</Project>
