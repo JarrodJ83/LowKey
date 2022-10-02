@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<VersionPrefix>0.0.1</VersionPrefix>
+	<Authors>Jarrod Johnson (@JarrodJ83)</Authors>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mysql.data" Version="8.0.30" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LowKey.Data.Extensions.Hosting\LowKey.Data.Extensions.Hosting.csproj" />
+    <ProjectReference Include="..\LowKey.Data\LowKey.Data.csproj" />
+  </ItemGroup>
+
+</Project>
