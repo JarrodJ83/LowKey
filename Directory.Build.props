@@ -11,6 +11,10 @@
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<ProjectUrl>https://github.com/JarrodJ83/LowKey</ProjectUrl>
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	<PackageReadmeFile>Readme.md</PackageReadmeFile>	
   </PropertyGroup>
 
+  <ItemGroup>
+	<None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 </Project>
