@@ -48,13 +48,15 @@ jobs:
                 Write-Host "Branch: Creating Prerelease $prerelease packages"
                 dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
+                dotnet pack LowKey.Data.MySql/LowKey.Data.MySql.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Postgres/LowKey.Data.Postgres.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
                 dotnet pack LowKey.Data.Extensions.Hosting/LowKey.Data.Extensions.Hosting.csproj -c Release --no-build --no-restore --version-suffix $prerelease -o $output
             } else {
                 dotnet pack LowKey.Data/LowKey.Data.csproj -c Release --no-build --no-restore -o $output
                 dotnet pack LowKey.Data.Sql/LowKey.Data.Sql.csproj -c Release --no-build --no-restore -o $output
+                dotnet pack LowKey.Data.MySql/LowKey.Data.MySql.csproj -c Release --no-build --no-restore -o $output
                 dotnet pack LowKey.Data.Postgres/LowKey.Data.Postgres.csproj -c Release --no-build --no-restore -o $output
                 dotnet pack LowKey.Data.Extensions.Hosting/LowKey.Data.Extensions.Hosting.csproj -c Release --no-build --no-restore -o $output
             }
 
-            dotnet nuget push "**/$output/**" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+            dotnet nuget push "**/$output/**" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
