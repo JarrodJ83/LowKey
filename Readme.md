@@ -16,8 +16,9 @@ A great example of how LowKey simplifies things is when you need different conne
 
 ## Currently Supported
 
-* SQL: LowKey.Data.Sql
-* Postgres: LowKey.Data.Postgres
+* SQL: [LowKey.Data.Sql](https://www.nuget.org/packages/LowKey.Data.Sql)
+* MySql: [LowKey.Data.MySql](https://www.nuget.org/packages/LowKey.Data.MySql)
+* Postgres: [LowKey.Data.Postgres](https://www.nuget.org/packages/LowKey.Data.Postgres)
 
 ## Key Concepts
 
