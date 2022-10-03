@@ -30,6 +30,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.Postgres", "Low
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LowKey.Data.MySql", "LowKey.Data.MySql\LowKey.Data.MySql.csproj", "{F287440A-426D-4F61-A5B1-5D3EA2BF06CA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LowKey.Data.MultiTenancy.ClaimBased", "LowKey.Data.MultiTenancy.ClaimBased\LowKey.Data.MultiTenancy.ClaimBased.csproj", "{939F7DF0-888B-4CD6-BADC-9F22F7C75B5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{F287440A-426D-4F61-A5B1-5D3EA2BF06CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F287440A-426D-4F61-A5B1-5D3EA2BF06CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F287440A-426D-4F61-A5B1-5D3EA2BF06CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{939F7DF0-888B-4CD6-BADC-9F22F7C75B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{939F7DF0-888B-4CD6-BADC-9F22F7C75B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{939F7DF0-888B-4CD6-BADC-9F22F7C75B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{939F7DF0-888B-4CD6-BADC-9F22F7C75B5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
