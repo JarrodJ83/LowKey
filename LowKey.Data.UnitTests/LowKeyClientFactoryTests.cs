@@ -36,7 +36,17 @@ namespace LowKey.Data.UnitTests
                 TestClient client = await WhenClientIsCreatedFor(dataStore.Id);
 
                 ThenClientIsForCorrectDataStoreAndTenant(client, dataStore, tenant);
-            } 
+            }
+        }
+
+        [Theory, AutoData]
+        public async Task DataStore_Not_Registered_Throws_DataStoreNotRegisteredException(DataStore dataStore, Tenant tenant)
+        {
+
+            using (TenantIdContext.CreateFor(tenant.Id))
+            {
+                await Assert.ThrowsAsync<DataStoreNotRegisteredException>(() => WhenClientIsCreatedFor(dataStore.Id));
+            }
         }
 
         [Theory, AutoData]
