@@ -1,7 +1,5 @@
 ﻿using LowKey.Data.Model;
 using LowKey.Data.MultiTenancy;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LowKey.Data
 {
@@ -18,17 +16,14 @@ namespace LowKey.Data
         }
 
         public async Task<TClient> Create<TClient>(DataStoreId dataStoreId, CancellationToken cancel = default)
-        {            
+        {
+            DataStore dataStore = _dataStoreRegistry.GetDataStore(dataStoreId);
+
             Tenant tenant = await _dataStoreTenantResolver.Resolve(dataStoreId, cancel);
 
-            return await GetClientFor<TClient>(dataStoreId, tenant, cancel);
-        }
+            IClientFactory<TClient> clientFactory = _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStore.Id);
 
-        Task<TClient> GetClientFor<TClient>(DataStoreId dataStoreId, Tenant tenant, CancellationToken cancellation = default)
-        {
-            IClientFactory<TClient> clientFactory = _dataStoreClientRegistry.ResolveClientFactory<TClient>(dataStoreId);
-            DataStore dataStore = _dataStoreRegistry.GetDataStore(dataStoreId);
-            return clientFactory.CreateForStore(dataStore, tenant, cancellation);
+            return await clientFactory.CreateForStore(dataStore, tenant, cancel);
         }
     }
 }

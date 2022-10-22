@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  web:
+    image: ${DOCKER_REGISTRY-}web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    environment:
+      SQL_USERNAME: sa
+      SQL_PASSWORD: Your_password123
+      SQL_SERVER: sql-tenant1
+      NPGSQL_SERVER: npsql-tenant1
+  sql:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: Your_password123 
+      POSTGRES_DB: test

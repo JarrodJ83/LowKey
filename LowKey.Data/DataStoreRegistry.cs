@@ -7,22 +7,25 @@ namespace LowKey.Data
 {
     public class DataStoreRegistry
     {
-        private readonly ISet<DataStore> _dataStores;
+        private readonly IDictionary<DataStoreId, DataStore> _dataStores;
 
         public DataStoreRegistry(ISet<DataStore>? dataStores = null)
         {
-            _dataStores = dataStores ?? new HashSet<DataStore>();
+            dataStores ??= new HashSet<DataStore>();
+
+            _dataStores =  dataStores.ToDictionary(ds => ds.Id, ds => ds);
         }
 
-        public void Add(DataStore dataStore) => _dataStores.Add(dataStore);
+        public void Add(DataStore dataStore) => _dataStores.Add(dataStore.Id, dataStore);
 
         public DataStore GetDataStore(DataStoreId dataStoreId)
         {
-            var dataStore = _dataStores.SingleOrDefault(dataStore => dataStore.Id == dataStoreId);
+            if(_dataStores.TryGetValue(dataStoreId, out var dataStore))
+            {
+                return dataStore;
+            }
 
-            if (dataStore == null) throw new InvalidOperationException($"DataStore {dataStoreId.Value} not registered");
-
-            return dataStore;
+            throw new DataStoreNotRegisteredException(dataStoreId);
         }
     }
 }

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5031f5b2-f0dd-45c9-84fd-7580e05b691a</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\</DockerfileContext>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+    <PackageReference Include="Npgsql" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\LowKey.Data.Extensions.Hosting\LowKey.Data.Extensions.Hosting.csproj" />
+    <ProjectReference Include="..\..\..\LowKey.Data.Postgres\LowKey.Data.Postgres.csproj" />
+    <ProjectReference Include="..\..\..\LowKey.Data.Sql\LowKey.Data.Sql.csproj" />
+    <ProjectReference Include="..\..\..\LowKey.Data\LowKey.Data.csproj" />
+  </ItemGroup>
+
+</Project>
